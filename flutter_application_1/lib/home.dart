@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'routes.dart';
-import 'package:logger/logger.dart'; // Import the logger package
+import 'package:logger/logger.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -17,9 +17,46 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: _HomeAppBar(),
+      ),
       body: Center(
         child: _HomeBodyPage(),
       ),
+    );
+  }
+}
+
+class _HomeAppBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Color(0xff002c58),
+      shape:
+          const Border(bottom: BorderSide(color: Color(0xFF2D2D39), width: 2)),
+      title: Row(
+        children: <Widget>[
+          GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              child: Image.asset(
+                'assets/paimon_logo.png',
+                width: 35,
+                height: 35,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Text(
+            "Dashboard",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+      automaticallyImplyLeading: false,
     );
   }
 }
@@ -30,8 +67,11 @@ class _HomeBodyPage extends StatefulWidget {
 }
 
 class _HomeBodyPageState extends State<_HomeBodyPage> {
-  final Logger logger = Logger();
   List<dynamic> charactersData = [];
+  Map<String, String> characterVisions = {};
+  Map<String, String> characterNation = {};
+  bool loadingComplete = false;
+  final Logger logger = Logger();
 
   @override
   void initState() {
@@ -40,65 +80,66 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
   }
 
   Future<void> fetchData() async {
-    
     try {
-      final int totalPages = await getTotalPages();
+      final response =
+          await http.get(Uri.parse('https://genshin.jmp.blue/characters'));
 
-      if (totalPages > 0) {
-        for (int currentPage = 1; currentPage <= totalPages; currentPage++) {
-          final response = await http.get(
-              Uri.parse('https://gsi.fly.dev/characters?page=$currentPage'));
+      if (response.statusCode == 200) {
+        final List<dynamic> fetchedCharactersData = json.decode(response.body);
+        setState(() {
+          charactersData = fetchedCharactersData;
+        });
 
-          if (response.statusCode == 200) {
-            final dynamic responseData = json.decode(response.body);
+        await Future.wait(
+          fetchedCharactersData.map((characterName) async {
+            final visionResponse = await http.get(Uri.parse(
+                'https://genshin.jmp.blue/characters/$characterName'));
 
-            if (responseData != null &&
-                responseData['results'] is List<dynamic>) {
-              setState(() {
-                charactersData.addAll(responseData['results']);
-              });
+            if (visionResponse.statusCode == 200) {
+              final characterData = json.decode(visionResponse.body);
+              characterVisions[characterName] = characterData['vision'];
+              characterNation[characterName] = characterData['nation'];
             } else {
-              logger.e('Invalid data format received from the API');
+              throw Exception('Failed to load vision data for $characterName');
             }
-          } else {
-            throw Exception('Failed to load data from the API');
-          }
-        }
+          }),
+        );
+
+        // Mark loading as complete
+        setState(() {
+          loadingComplete = true;
+        });
+      } else {
+        throw Exception('Failed to load data from the API');
       }
     } catch (e) {
       logger.e('Error fetching data: $e');
     }
   }
 
-  Future<int> getTotalPages() async {
-    final response =
-        await http.get(Uri.parse('https://gsi.fly.dev/characters'));
-
-    if (response.statusCode == 200) {
-      final dynamic responseData = json.decode(response.body);
-      return responseData['total_pages'] ?? 0;
-    } else {
-      throw Exception('Failed to get total pages from the API');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: charactersData.isEmpty
-          ? CircularProgressIndicator()
-          : ListView.builder(
-              itemCount: charactersData.length,
-              itemBuilder: (context, index) {
-                final character = charactersData[index];
-                final String name = character['name'];
-                final String vision = character['vision'];
+      child: !loadingComplete
+          ? const CircularProgressIndicator()
+          : charactersData.isEmpty
+              ? const Text('No characters found.')
+              : ListView.builder(
+                  itemCount: charactersData.length,
+                  itemBuilder: (context, index) {
+                    final characterName = charactersData[index];
+                    final vision = characterVisions[characterName];
+                    final nation = characterNation[characterName];
 
-                return ListTile(
-                  title: Text('$index: $name - Vision: $vision'),
-                );
-              },
-            ),
+                    return ListTile(
+                      title: Text(
+                        vision != null
+                            ? '$characterName ($vision, $nation)'
+                            : '$characterName (Vision not found)',
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }
