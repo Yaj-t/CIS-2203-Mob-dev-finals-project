@@ -68,7 +68,7 @@ class _HomeBodyPage extends StatefulWidget {
 
 class _HomeBodyPageState extends State<_HomeBodyPage> {
   List<dynamic> charactersData = [];
-  Map<String, String> characterVisions = {};
+  Map<String, List<String>> charactersByVision = {};
   Map<String, String> characterIcons = {};
   bool loadingComplete = false;
   final Logger logger = Logger();
@@ -97,14 +97,17 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
 
             if (visionResponse.statusCode == 200) {
               final characterData = json.decode(visionResponse.body);
-              characterVisions[characterName] = characterData['vision'];
 
               final iconResponse = await http.get(Uri.parse(
-                  'https://genshin.jmp.blue/characters/$characterName/icon'));
+                  'https://genshin.jmp.blue/characters/$characterName/icon-big'));
               if (iconResponse.statusCode != 404) {
                 characterIcons[characterName] =
-                    'https://genshin.jmp.blue/characters/$characterName/icon';
+                    'https://genshin.jmp.blue/characters/$characterName/icon-big';
               }
+
+              final vision = characterData['vision'];
+              charactersByVision.putIfAbsent(vision, () => []);
+              charactersByVision[vision]!.add(characterName);
             } else {
               throw Exception('Failed to load vision data for $characterName');
             }
@@ -130,42 +133,105 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
           ? const CircularProgressIndicator()
           : charactersData.isEmpty
               ? const Text('No characters found.')
-              : ListView.builder(
-                  itemCount: charactersData.length,
-                  itemBuilder: (context, index) {
-                    final characterName = charactersData[index];
-                    final vision = characterVisions[characterName];
-                    final iconUrl = characterIcons[characterName];
-
-                    return ListTile(
-                      title: Row(children: [
-                        if (iconUrl != null)
+              : ListView(
+                  children: charactersByVision.entries.map((entry) {
+                    final vision = entry.key;
+                    final characterNames = entry.value;
+                    return Container(
+                      height: 275,
+                      color: Color(0xFFFFF5E1),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Image.network(
-                              iconUrl!,
-                              width: 24, // Set the desired width
-                              height: 24, // Set the desired height
-                            ),
-                          )
-                        else
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Image.asset(
-                              'assets/paimon_empty.png',
-                              width: 24,
-                              height: 24,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16.0),
+                            child: Text(
+                              '$vision Characters',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff002c58),
+                              ),
                             ),
                           ),
-                        Text(
-                          vision != null
-                              ? '$characterName ($vision)'
-                              : '$characterName (Vision not found)',
-                        ),
-                      ]),
+                          SizedBox(
+                            height: 200, // Adjust the height as needed
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: characterNames.length,
+                              itemBuilder: (context, index) {
+                                final characterName = characterNames[index];
+                                final iconUrl = characterIcons[characterName];
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width: 200, // Set your desired width
+                                    height: 250, // Set your desired height
+                                    child: Card(
+                                      color: getVisionColor(vision),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 10.0,
+                                          ),
+                                          if (iconUrl != null)
+                                            Image.network(
+                                              iconUrl!,
+                                              width: 125,
+                                              height: 125,
+                                            )
+                                          else
+                                            Image.asset(
+                                              'assets/paimon_empty.png',
+                                              width: 125,
+                                              height: 125,
+                                            ),
+                                          SizedBox(
+                                            height: 5.0,
+                                          ),
+                                          Text(
+                                            characterName,
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xff002c58),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     );
-                  },
+                  }).toList(),
                 ),
     );
+  }
+
+  Color getVisionColor(String vision) {
+    switch (vision) {
+      case 'Dendro':
+        return Colors.green.shade400;
+      case 'Pyro':
+        return Colors.red;
+      case 'Hydro':
+        return Colors.blue.shade400;
+      case 'Anemo':
+        return Colors.green.shade100;
+      case 'Geo':
+        return Colors.brown;
+      case 'Electro':
+        return Colors.purple;
+      case 'Cryo':
+        return Colors.blue.shade100;
+      default:
+        return Colors.grey;
+    }
   }
 }
