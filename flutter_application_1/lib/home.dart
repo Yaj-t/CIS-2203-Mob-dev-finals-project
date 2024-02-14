@@ -24,6 +24,7 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: _HomeBodyPage(),
       ),
+      bottomNavigationBar: _HomeFooter(),
     );
   }
 }
@@ -143,6 +144,9 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(
+                            height: 25.0,
+                          ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 16.0),
@@ -166,8 +170,8 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                                    width: 200, // Set your desired width
-                                    height: 250, // Set your desired height
+                                    width: 200,
+                                    height: 250,
                                     child: Card(
                                       color: getVisionColor(vision),
                                       child: Column(
@@ -225,7 +229,7 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
       case 'Anemo':
         return Colors.green.shade100;
       case 'Geo':
-        return Colors.brown;
+        return Colors.yellow.shade300;
       case 'Electro':
         return Colors.purple;
       case 'Cryo':
@@ -233,5 +237,39 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
       default:
         return Colors.grey;
     }
+  }
+}
+
+class _HomeFooter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      backgroundColor: Color(0xff002c58),
+      unselectedItemColor: Colors.white,
+      selectedItemColor: Color(0xFF01BE96),
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.dashboard),
+          label: "Dashboard",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: "Search",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.local_phone_rounded),
+          label: "Contact",
+        ),
+      ],
+      onTap: (int index) {
+        if (index == 1) {
+          // Navigate to the Dashboard screen
+          // Navigator.pushNamed(context, SearchScreen.routeName);
+        } else if (index == 2) {
+          // Navigate to the Contact screen
+          // Navigator.pushNamed(context, ContactScreen.routeName);
+        }
+      },
+    );
   }
 }
