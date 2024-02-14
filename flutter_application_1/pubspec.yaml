@@ -63,6 +63,7 @@ flutter:
   assets:
     - assets/website_logo.png
     - assets/paimon_logo.png
+    - assets/paimon_empty.png
     - assets/Element_Anemo.svg
     - assets/Element_Cryo.svg
     - assets/Element_Dendro.svg

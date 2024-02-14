@@ -69,7 +69,7 @@ class _HomeBodyPage extends StatefulWidget {
 class _HomeBodyPageState extends State<_HomeBodyPage> {
   List<dynamic> charactersData = [];
   Map<String, String> characterVisions = {};
-  Map<String, String> characterNation = {};
+  Map<String, String> characterIcons = {};
   bool loadingComplete = false;
   final Logger logger = Logger();
 
@@ -98,7 +98,13 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
             if (visionResponse.statusCode == 200) {
               final characterData = json.decode(visionResponse.body);
               characterVisions[characterName] = characterData['vision'];
-              characterNation[characterName] = characterData['nation'];
+
+              final iconResponse = await http.get(Uri.parse(
+                  'https://genshin.jmp.blue/characters/$characterName/icon'));
+              if (iconResponse.statusCode != 404) {
+                characterIcons[characterName] =
+                    'https://genshin.jmp.blue/characters/$characterName/icon';
+              }
             } else {
               throw Exception('Failed to load vision data for $characterName');
             }
@@ -129,14 +135,34 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
                   itemBuilder: (context, index) {
                     final characterName = charactersData[index];
                     final vision = characterVisions[characterName];
-                    final nation = characterNation[characterName];
+                    final iconUrl = characterIcons[characterName];
 
                     return ListTile(
-                      title: Text(
-                        vision != null
-                            ? '$characterName ($vision, $nation)'
-                            : '$characterName (Vision not found)',
-                      ),
+                      title: Row(children: [
+                        if (iconUrl != null)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Image.network(
+                              iconUrl!,
+                              width: 24, // Set the desired width
+                              height: 24, // Set the desired height
+                            ),
+                          )
+                        else
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Image.asset(
+                              'assets/paimon_empty.png',
+                              width: 24,
+                              height: 24,
+                            ),
+                          ),
+                        Text(
+                          vision != null
+                              ? '$characterName ($vision)'
+                              : '$characterName (Vision not found)',
+                        ),
+                      ]),
                     );
                   },
                 ),
