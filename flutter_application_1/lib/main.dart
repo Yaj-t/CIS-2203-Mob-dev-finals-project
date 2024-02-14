@@ -4,6 +4,7 @@ import 'customtextformfield.dart';
 import 'primarybutton.dart';
 import 'passwordfield.dart';
 import 'routes.dart';
+import 'home.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -56,7 +57,7 @@ class _LoginScreenState extends State<_LoginScreenBody> {
                   style: TextStyle(
                       fontSize: 30.0,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF74382C)),
+                      color: Color(0xff002c58)),
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -96,7 +97,7 @@ class _LoginScreenState extends State<_LoginScreenBody> {
   }
 
   void login() {
-    // Navigator.pushNamed(context, HomeScreen.routeName);
+    Navigator.pushNamed(context, HomeScreen.routeName);
   }
 
   void setPasswordVisibility() {
@@ -116,7 +117,7 @@ class _LoginFooter extends StatelessWidget {
         TextSpan(
           text: 'Not yet a member?',
           style: TextStyle(
-            color: Color(0xFF74382C),
+            color: Color(0xff002c58),
             fontSize: 17.0,
           ),
           children: <TextSpan>[
@@ -124,7 +125,7 @@ class _LoginFooter extends StatelessWidget {
               text: ' Register now',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Color(0xff84bd94),
+                color: Color(0xff18596b),
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
@@ -133,8 +134,7 @@ class _LoginFooter extends StatelessWidget {
             ),
           ],
         ),
-        textAlign:
-            TextAlign.center,
+        textAlign: TextAlign.center,
       ),
     );
   }

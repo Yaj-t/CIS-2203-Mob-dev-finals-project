@@ -29,12 +29,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Icon(
             widget.iconData,
-            color: _isFocused ? Color(0xFF74382C) : Color(0xFF808080),
+            color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
           ),
         ),
         labelText: widget.labelText,
         labelStyle: TextStyle(
-          color: _isFocused ? Color(0xFF74382C) : Color(0xFF808080),
+          color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
         ),
         hintText: widget.hintText,
         enabledBorder: OutlineInputBorder(
@@ -46,7 +46,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(
-            color: Color(0xFF2D2D39),
+            color: Color(0xff002c58),
           ),
         ),
       ),

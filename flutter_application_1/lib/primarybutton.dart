@@ -10,7 +10,7 @@ class PrimaryButton extends StatelessWidget {
     required this.text,
     required this.iconData,
     required this.onPressed,
-    this.buttonColor = const Color(0xff84bd94),
+    this.buttonColor = const Color(0xff18596b),
   });
 
   @override

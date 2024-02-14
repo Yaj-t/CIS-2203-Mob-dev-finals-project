@@ -30,19 +30,19 @@ class _PasswordFieldState extends State<PasswordField> {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Icon(
             Icons.lock,
-            color: _isFocused ? Color(0xFF74382C) : Color(0xFF808080),
+            color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
           ),
         ),
         suffixIcon: GestureDetector(
           onTap: widget.onTap,
           child: Icon(
             widget.obscureText ? Icons.visibility_off : Icons.visibility,
-            color: _isFocused ? Color(0xFF74382C) : Color(0xFF808080),
+            color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
           ),
         ),
         labelText: widget.labelText,
         labelStyle: TextStyle(
-          color: _isFocused ? Color(0xFF74382C) : Color(0xFF808080),
+          color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
         ),
         hintText: widget.hintText,
         enabledBorder: OutlineInputBorder(
@@ -54,7 +54,7 @@ class _PasswordFieldState extends State<PasswordField> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(
-            color: Color(0xFF2D2D39),
+            color: Color(0xff002c58),
           ),
         ),
       ),
