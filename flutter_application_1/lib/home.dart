@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'routes.dart';
+import 'footer.dart';
+import 'appbar.dart';
+import 'color.dart';
+import 'details.dart';
 import 'package:logger/logger.dart';
 
 void main() {
@@ -19,55 +23,22 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
-        child: _HomeAppBar(),
+        child: HomeAppBar(),
       ),
       body: Center(
-        child: _HomeBodyPage(),
+        child: HomeBodyPage(),
       ),
-      bottomNavigationBar: _HomeFooter(),
+      bottomNavigationBar: HomeFooter(),
     );
   }
 }
 
-class _HomeAppBar extends StatelessWidget {
+class HomeBodyPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Color(0xff002c58),
-      shape:
-          const Border(bottom: BorderSide(color: Color(0xFF2D2D39), width: 2)),
-      title: Row(
-        children: <Widget>[
-          GestureDetector(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5.0),
-              child: Image.asset(
-                'assets/paimon_logo.png',
-                width: 35,
-                height: 35,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          const Text(
-            "Dashboard",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-      automaticallyImplyLeading: false,
-    );
-  }
+  HomeBodyPageState createState() => HomeBodyPageState();
 }
 
-class _HomeBodyPage extends StatefulWidget {
-  @override
-  _HomeBodyPageState createState() => _HomeBodyPageState();
-}
-
-class _HomeBodyPageState extends State<_HomeBodyPage> {
+class HomeBodyPageState extends State<HomeBodyPage> {
   List<dynamic> charactersData = [];
   Map<String, List<String>> charactersByVision = {};
   Map<String, String> characterIcons = {};
@@ -160,7 +131,7 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
                             ),
                           ),
                           SizedBox(
-                            height: 200, // Adjust the height as needed
+                            height: 200,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: characterNames.length,
@@ -169,40 +140,53 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
                                 final iconUrl = characterIcons[characterName];
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    width: 200,
-                                    height: 250,
-                                    child: Card(
-                                      color: getVisionColor(vision),
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 10.0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              CharactersDetailsPage(
+                                            character: characterName,
                                           ),
-                                          if (iconUrl != null)
-                                            Image.network(
-                                              iconUrl!,
-                                              width: 125,
-                                              height: 125,
-                                            )
-                                          else
-                                            Image.asset(
-                                              'assets/paimon_empty.png',
-                                              width: 125,
-                                              height: 125,
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 200,
+                                      height: 250,
+                                      child: Card(
+                                        color: getVisionColor(vision),
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 10.0,
                                             ),
-                                          SizedBox(
-                                            height: 5.0,
-                                          ),
-                                          Text(
-                                            characterName,
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Color(0xff002c58),
+                                            if (iconUrl != null)
+                                              Image.network(
+                                                iconUrl,
+                                                width: 125,
+                                                height: 125,
+                                              )
+                                            else
+                                              Image.asset(
+                                                'assets/paimon_empty.png',
+                                                width: 125,
+                                                height: 125,
+                                              ),
+                                            SizedBox(
+                                              height: 5.0,
                                             ),
-                                          ),
-                                        ],
+                                            Text(
+                                              characterName,
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xff002c58),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -215,61 +199,6 @@ class _HomeBodyPageState extends State<_HomeBodyPage> {
                     );
                   }).toList(),
                 ),
-    );
-  }
-
-  Color getVisionColor(String vision) {
-    switch (vision) {
-      case 'Dendro':
-        return Colors.green.shade400;
-      case 'Pyro':
-        return Colors.red;
-      case 'Hydro':
-        return Colors.blue.shade400;
-      case 'Anemo':
-        return Colors.green.shade100;
-      case 'Geo':
-        return Colors.yellow.shade300;
-      case 'Electro':
-        return Colors.purple;
-      case 'Cryo':
-        return Colors.blue.shade100;
-      default:
-        return Colors.grey;
-    }
-  }
-}
-
-class _HomeFooter extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      backgroundColor: Color(0xff002c58),
-      unselectedItemColor: Colors.white,
-      selectedItemColor: Color(0xFF01BE96),
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.dashboard),
-          label: "Dashboard",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: "Search",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.local_phone_rounded),
-          label: "Contact",
-        ),
-      ],
-      onTap: (int index) {
-        if (index == 1) {
-          // Navigate to the Dashboard screen
-          // Navigator.pushNamed(context, SearchScreen.routeName);
-        } else if (index == 2) {
-          // Navigate to the Contact screen
-          // Navigator.pushNamed(context, ContactScreen.routeName);
-        }
-      },
     );
   }
 }

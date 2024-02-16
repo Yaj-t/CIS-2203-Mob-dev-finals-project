@@ -21,19 +21,19 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _LoginScreenBody(),
+        child: LoginScreenBody(),
       ),
-      bottomNavigationBar: _LoginFooter(),
+      bottomNavigationBar: LoginFooter(),
     );
   }
 }
 
-class _LoginScreenBody extends StatefulWidget {
+class LoginScreenBody extends StatefulWidget {
   @override
-  State<_LoginScreenBody> createState() => _LoginScreenState();
+  State<LoginScreenBody> createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<_LoginScreenBody> {
+class LoginScreenState extends State<LoginScreenBody> {
   bool obscureText = true;
 
   @override
@@ -48,7 +48,7 @@ class _LoginScreenState extends State<_LoginScreenBody> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                WebsiteLogo(),
+                website_logo(),
                 const SizedBox(
                   height: 20.0,
                 ),
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<_LoginScreenBody> {
   }
 }
 
-class _LoginFooter extends StatelessWidget {
+class LoginFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -140,7 +140,7 @@ class _LoginFooter extends StatelessWidget {
   }
 }
 
-class WebsiteLogo extends StatelessWidget {
+class website_logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
