@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'home.dart';
 
-
 final Map<String, WidgetBuilder> routes = {
-  LoginScreen.routeName: (BuildContext context) => LoginScreen(),
+  LoginScreen.routeName: (BuildContext context) => const LoginScreen(),
   HomeScreen.routeName: (BuildContext context) => HomeScreen(),
 };
 

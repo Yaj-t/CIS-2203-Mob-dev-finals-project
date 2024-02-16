@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -54,7 +53,7 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
           future: fetchPortrait(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -65,7 +64,7 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
               );
             } else {
               return Image.asset(
-                'assets/paimon_empty.png',
+                'assets/portrait_empty.png',
                 width: 400,
                 height: 400,
               );
