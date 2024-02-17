@@ -145,7 +145,7 @@ class ApiService {
               String itemId = itemData['id'];
               String itemName = itemData['name'];
               int itemRarity = itemData['rarity'];
-              
+
               items.add({
                 'id': itemId,
                 'name': itemName,
@@ -161,6 +161,86 @@ class ApiService {
         }
       } else {
         throw Exception('Failed to load data for common ascension materials');
+      }
+    } catch (e) {
+      return {};
+    }
+
+    return {};
+  }
+
+  Future<Map<String, String>> fetchWeeklyBossAscensionMaterials(
+      String character) async {
+    try {
+      final response = await http
+          .get(Uri.parse('https://genshin.jmp.blue/materials/talent-boss'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> weeklyBossMaterials =
+            json.decode(response.body);
+
+        for (var entry in weeklyBossMaterials.entries) {
+          String weeklyMaterialId = entry.key;
+          Map<String, dynamic> weeklyMaterialData = entry.value;
+
+          if (weeklyMaterialData['characters'] != null &&
+              weeklyMaterialData['characters']
+                  .contains(character.toLowerCase())) {
+            String weeklyMaterialName = weeklyMaterialData['name'];
+            return {'id': weeklyMaterialId, 'name': weeklyMaterialName};
+          }
+        }
+      } else {
+        throw Exception(
+            'Failed to load data for weekly boss ascension materials');
+      }
+    } catch (e) {
+      return {};
+    }
+
+    return {};
+  }
+
+  Future<Map<String, dynamic>> fetchTalentAscensionMaterials(
+    String character,
+  ) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://genshin.jmp.blue/materials/talent-book'),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> talentMaterials = json.decode(response.body);
+
+        for (var entry in talentMaterials.entries) {
+          Map<String, dynamic> talentMaterialData = entry.value;
+
+          if (talentMaterialData['characters'] != null &&
+              List<String>.from(talentMaterialData['characters'])
+                  .contains(character.toLowerCase())) {
+            String talentMaterialId = entry.key;
+            List<Map<String, dynamic>> talentItems = [];
+
+            for (var talentItemData in talentMaterialData['items']) {
+              String talentItemId = talentItemData['id'];
+              String talentItemName = talentItemData['name'];
+              int talentItemRarity = talentItemData['rarity'];
+
+              talentItems.add({
+                'id': talentItemId,
+                'name': talentItemName,
+                'rarity': talentItemRarity,
+              });
+            }
+
+            return {
+              'id': talentMaterialId,
+              'items': talentItems,
+            };
+          }
+        }
+      } else {
+        throw Exception('Failed to load data for talent ascension materials');
       }
     } catch (e) {
       return {};

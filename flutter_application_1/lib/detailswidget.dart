@@ -82,6 +82,55 @@ Widget buildCommonMaterialRow(Map<String, dynamic> commonMaterial) {
       ],
     );
   } else {
-    return Container(); // Return an empty container if commonMaterial is empty
+    return Container();
+  }
+}
+
+Widget buildWeeklyBossMaterialRow(Map<String, String> weeklyBossMaterial) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text('Weekly Boss Material:'),
+      SizedBox(width: 10),
+      Text(
+        '${weeklyBossMaterial['name']}',
+        style: TextStyle(
+          fontSize: 14,
+          color: Color(0xff002c58),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget buildTalentMaterialRow(Map<String, dynamic> talentMaterial) {
+  if (talentMaterial.isNotEmpty) {
+    List<Widget> itemsWidgets = [];
+
+    if (talentMaterial['items'] != null) {
+      for (var itemData in talentMaterial['items']) {
+        itemsWidgets.add(
+          Column(
+            children: [
+              Text('Talent Item ID: ${itemData['id']}'),
+              Text('Talent Item Name: ${itemData['name']}'),
+              Text('Talent Item Rarity: ${itemData['rarity']}'),
+              SizedBox(height: 10),
+            ],
+          ),
+        );
+      }
+    }
+
+    return Column(
+      children: [
+        Text('Talent Common Materials:'),
+        Column(
+          children: itemsWidgets,
+        ),
+      ],
+    );
+  } else {
+    return Container();
   }
 }

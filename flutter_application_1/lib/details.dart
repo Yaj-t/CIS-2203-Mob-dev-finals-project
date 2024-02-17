@@ -39,7 +39,9 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
             apiService.fetchAscensionMaterials(vision),
             apiService.fetchBossAscensionMaterials(character),
             apiService.fetchLocalAscensionMaterials(character),
-            apiService.fetchCommonAscensionMaterials(character)
+            apiService.fetchCommonAscensionMaterials(character),
+            apiService.fetchWeeklyBossAscensionMaterials(character),
+            apiService.fetchTalentAscensionMaterials(character)
           ]),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -77,6 +79,12 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
               final Map<String, dynamic> commonMaterial =
                   results[4] as Map<String, dynamic>? ?? {};
 
+              final Map<String, String> weeklyBossMaterial =
+                  results[5] as Map<String, String>? ?? {};
+
+              final Map<String, dynamic> talentMaterial =
+                  results[6] as Map<String, dynamic>? ?? {};
+
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -98,20 +106,24 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                       height: 50,
                     ),
                     SizedBox(height: 10),
-                    buildAscensionMaterialRow(
-                        'Sliver', ascensionMaterials['sliver']!),
-                    buildAscensionMaterialRow(
-                        'Fragment', ascensionMaterials['fragment']!),
-                    buildAscensionMaterialRow(
-                        'Chunk', ascensionMaterials['chunk']!),
-                    buildAscensionMaterialRow(
-                        'Gemstone', ascensionMaterials['gemstone']!),
+                    buildAscensionMaterialRow('Sliver',
+                        ascensionMaterials['sliver'] ?? {}),
+                    buildAscensionMaterialRow('Fragment',
+                        ascensionMaterials['fragment'] ?? {}), 
+                    buildAscensionMaterialRow('Chunk',
+                        ascensionMaterials['chunk'] ?? {}),
+                    buildAscensionMaterialRow('Gemstone',
+                        ascensionMaterials['gemstone'] ?? {}), 
                     SizedBox(height: 10),
                     buildBossMaterialRow(bossMaterial),
                     SizedBox(height: 10),
                     buildLocalMaterialRow(localMaterial),
                     SizedBox(height: 10),
                     buildCommonMaterialRow(commonMaterial),
+                    SizedBox(height: 10),
+                    buildWeeklyBossMaterialRow(weeklyBossMaterial),
+                    SizedBox(height: 10),
+                    buildTalentMaterialRow(talentMaterial),
                     SizedBox(height: 10),
                   ],
                 ),
