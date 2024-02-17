@@ -9,7 +9,7 @@ Color getVisionColor(String vision) {
     case 'Hydro':
       return Colors.blue.shade400;
     case 'Anemo':
-      return Colors.green.shade100;
+      return Color(0xff75c2aa);
     case 'Geo':
       return Colors.yellow.shade300;
     case 'Electro':
@@ -21,4 +21,23 @@ Color getVisionColor(String vision) {
   }
 }
 
-
+Color getVisionSecondaryColor(String vision) {
+  switch (vision) {
+    case 'Dendro':
+      return Colors.green.shade400;
+    case 'Pyro':
+      return Colors.red;
+    case 'Hydro':
+      return Colors.blue.shade400;
+    case 'Anemo':
+      return Colors.green.shade100;
+    case 'Geo':
+      return Colors.yellow.shade300;
+    case 'Electro':
+      return Colors.purple;
+    case 'Cryo':
+      return Color(0xffa0d7e4);
+    default:
+      return Colors.grey;
+  }
+}
