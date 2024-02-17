@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'apiservice.dart';
 import 'color.dart';
+import 'detailswidget.dart';
 
 class CharactersDetailsPage extends StatefulWidget {
   final String character;
@@ -37,6 +38,8 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
             apiService.fetchPortrait(character),
             apiService.fetchAscensionMaterials(vision),
             apiService.fetchBossAscensionMaterials(character),
+            apiService.fetchLocalAscensionMaterials(character),
+            apiService.fetchCommonAscensionMaterials(character)
           ]),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -68,6 +71,12 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
               final Map<String, String> bossMaterial =
                   results[2] as Map<String, String>? ?? {};
 
+              final Map<String, String> localMaterial =
+                  results[3] as Map<String, String>? ?? {};
+
+              final Map<String, dynamic> commonMaterial =
+                  results[4] as Map<String, dynamic>? ?? {};
+
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -98,8 +107,12 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                     buildAscensionMaterialRow(
                         'Gemstone', ascensionMaterials['gemstone']!),
                     SizedBox(height: 10),
-                    // Display boss material information
                     buildBossMaterialRow(bossMaterial),
+                    SizedBox(height: 10),
+                    buildLocalMaterialRow(localMaterial),
+                    SizedBox(height: 10),
+                    buildCommonMaterialRow(commonMaterial),
+                    SizedBox(height: 10),
                   ],
                 ),
               );
@@ -107,43 +120,6 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
           },
         ),
       ),
-    );
-  }
-
-  Widget buildAscensionMaterialRow(
-    String materialType,
-    Map<String, dynamic> materialData,
-  ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('$materialType:'),
-        SizedBox(width: 10),
-        Text(
-          '${materialData['name']}',
-          style: TextStyle(
-            fontSize: 14,
-            color: Color(0xff002c58),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildBossMaterialRow(Map<String, String> bossMaterial) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('Boss Material:'),
-        SizedBox(width: 10),
-        Text(
-          '${bossMaterial['name']}',
-          style: TextStyle(
-            fontSize: 14,
-            color: Color(0xff002c58),
-          ),
-        ),
-      ],
     );
   }
 }

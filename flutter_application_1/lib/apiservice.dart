@@ -1,7 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:logger/logger.dart';
 
 class ApiService {
+  final Logger logger = Logger();
+
   Future<String> fetchPortrait(String character) async {
     try {
       final response = await http
@@ -66,7 +69,6 @@ class ApiService {
       if (response.statusCode == 200) {
         final Map<String, dynamic> bossMaterials = json.decode(response.body);
 
-        // Iterate through the boss materials to find the one associated with the character
         for (var entry in bossMaterials.entries) {
           String materialId = entry.key;
           Map<String, dynamic> materialData = entry.value;
@@ -79,6 +81,86 @@ class ApiService {
         }
       } else {
         throw Exception('Failed to load data for boss ascension materials');
+      }
+    } catch (e) {
+      return {};
+    }
+
+    return {};
+  }
+
+  Future<Map<String, String>> fetchLocalAscensionMaterials(
+      String character) async {
+    try {
+      final response = await http.get(
+          Uri.parse('https://genshin.jmp.blue/materials/local-specialties'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> localMaterials = json.decode(response.body);
+
+        for (var regionData in localMaterials.values) {
+          if (regionData is List) {
+            for (var entry in regionData) {
+              if (entry['characters'] != null &&
+                  entry['characters'].contains(character.toLowerCase())) {
+                String localMaterialId = entry['id'];
+                String localMaterialName = entry['name'];
+
+                return {'id': localMaterialId, 'name': localMaterialName};
+              }
+            }
+          }
+        }
+      } else {
+        throw Exception('Failed to load data for local ascension materials');
+      }
+    } catch (e) {
+      return {};
+    }
+
+    return {};
+  }
+
+  Future<Map<String, dynamic>> fetchCommonAscensionMaterials(
+    String character,
+  ) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://genshin.jmp.blue/materials/common-ascension'),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> commonMaterials = json.decode(response.body);
+
+        for (var entry in commonMaterials.entries) {
+          Map<String, dynamic> commonMaterialData = entry.value;
+
+          if (commonMaterialData['characters'] != null &&
+              List<String>.from(commonMaterialData['characters'])
+                  .contains(character.toLowerCase())) {
+            String commonMaterialId = entry.key;
+            List<Map<String, dynamic>> items = [];
+
+            for (var itemData in commonMaterialData['items']) {
+              String itemId = itemData['id'];
+              String itemName = itemData['name'];
+              int itemRarity = itemData['rarity'];
+              
+              items.add({
+                'id': itemId,
+                'name': itemName,
+                'rarity': itemRarity,
+              });
+            }
+
+            return {
+              'id': commonMaterialId,
+              'items': items,
+            };
+          }
+        }
+      } else {
+        throw Exception('Failed to load data for common ascension materials');
       }
     } catch (e) {
       return {};
