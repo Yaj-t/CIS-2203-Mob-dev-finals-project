@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'routes.dart';
-import 'home.dart';
-import 'appbar.dart';
 import 'color.dart';
 import 'details.dart';
 import 'package:logger/logger.dart';
 
-class HomeBodyPage extends StatefulWidget {
+class CharacterBodyPage extends StatefulWidget {
   @override
-  HomeBodyPageState createState() => HomeBodyPageState();
+  CharacterBodyPageState createState() => CharacterBodyPageState();
 }
 
-class HomeBodyPageState extends State<HomeBodyPage> {
+class CharacterBodyPageState extends State<CharacterBodyPage> {
   List<dynamic> charactersData = [];
   Map<String, List<String>> charactersByVision = {};
   Map<String, String> characterIcons = {};
@@ -38,6 +35,11 @@ class HomeBodyPageState extends State<HomeBodyPage> {
 
         await Future.wait(fetchedCharactersData.map((characterName) =>
             fetchCharacterData(characterName, charactersByVision)));
+
+        // Sort visions alphabetically
+        charactersByVision.forEach((vision, characterList) {
+          characterList.sort();
+        });
       } else {
         throw Exception('Failed to load data from the API');
       }
@@ -87,103 +89,115 @@ class HomeBodyPageState extends State<HomeBodyPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: charactersData.isEmpty
-          ? const CircularProgressIndicator()
-          : ListView(
-              children: charactersByVision.entries.map((entry) {
-                final vision = entry.key;
-                final characterNames = entry.value;
-                return Container(
-                  height: 275,
-                  color: Color(0xFFFFF5E1),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 25.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
-                        child: Text(
-                          '$vision Characters',
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff002c58),
+    // Sort visions alphabetically
+    List<MapEntry<String, List<String>>> sortedEntries =
+        charactersByVision.entries.toList()
+          ..sort((a, b) => a.key.compareTo(b.key));
+
+    return Container(
+      color: Color(0xFFFFF5E1),
+      child: Center(
+        child: charactersData.isEmpty
+            ? CircularProgressIndicator()
+            : ListView.builder(
+                itemCount: sortedEntries.length,
+                itemBuilder: (context, index) {
+                  final vision = sortedEntries[index].key;
+                  final characterNames = sortedEntries[index].value;
+
+                  return Container(
+                    height: 275,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 25.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8.0,
+                            horizontal: 16.0,
+                          ),
+                          child: Text(
+                            '$vision Characters',
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff002c58),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: characterNames.length,
-                          itemBuilder: (context, index) {
-                            final characterName = characterNames[index];
-                            final iconUrl = characterIcons[characterName];
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          CharactersDetailsPage(
-                                        character: characterName,
+                        SizedBox(
+                          height: 200,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: characterNames.length,
+                            itemBuilder: (context, index) {
+                              final characterName = characterNames[index];
+                              final iconUrl = characterIcons[characterName];
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CharactersDetailsPage(
+                                          character: characterName,
+                                          vision: vision,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 250,
-                                  child: Card(
-                                    color: getVisionColor(vision),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 10.0,
-                                        ),
-                                        if (iconUrl != null)
-                                          Image.network(
-                                            iconUrl,
-                                            width: 125,
-                                            height: 125,
-                                          )
-                                        else
-                                          Image.asset(
-                                            'assets/paimon_empty.png',
-                                            width: 125,
-                                            height: 125,
+                                    );
+                                  },
+                                  child: Container(
+                                    width: 200,
+                                    height: 250,
+                                    child: Card(
+                                      color: getVisionColor(vision),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 10.0,
                                           ),
-                                        SizedBox(
-                                          height: 5.0,
-                                        ),
-                                        Text(
-                                          characterName,
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xff002c58),
+                                          if (iconUrl != null)
+                                            Image.network(
+                                              iconUrl,
+                                              width: 125,
+                                              height: 125,
+                                            )
+                                          else
+                                            Image.asset(
+                                              'assets/paimon_empty.png',
+                                              width: 125,
+                                              height: 125,
+                                            ),
+                                          SizedBox(
+                                            height: 5.0,
                                           ),
-                                        ),
-                                      ],
+                                          Text(
+                                            characterName,
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xff002c58),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+      ),
     );
   }
 }

@@ -22,10 +22,9 @@ class HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   List<Widget> body = [
-    HomeBodyPage(),
+    CharacterBodyPage(),
     BattleBodyPage(),
     Container(
-      // Replace this with the widget you want for the third tab
       color: Colors.blue,
       child: Center(child: Text('Person Tab')),
     ),
@@ -37,6 +36,9 @@ class HomeScreenState extends State<HomeScreen> {
       appBar: HomeAppBar(),
       body: Center(child: body[_currentIndex]),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Color(0xFF01BE96),
+        unselectedItemColor: Colors.white,
+        backgroundColor: Color(0xff002c58),
         currentIndex: _currentIndex,
         onTap: (int newIndex) {
           setState(() {
@@ -45,12 +47,12 @@ class HomeScreenState extends State<HomeScreen> {
         },
         items: const [
           BottomNavigationBarItem(
-            label: 'Home',
-            icon: Icon(Icons.home),
+            label: 'Characters',
+            icon: Icon(Icons.person),
           ),
           BottomNavigationBarItem(
-            label: 'Menu',
-            icon: Icon(Icons.menu),
+            label: 'Battle',
+            icon: Icon(Icons.download),
           ),
           BottomNavigationBarItem(
             label: 'Person',

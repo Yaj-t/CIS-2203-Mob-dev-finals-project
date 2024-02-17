@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'color.dart';
 
 class CharactersDetailsPage extends StatefulWidget {
   final String character;
+  final String vision;
 
-  CharactersDetailsPage({required this.character});
+  CharactersDetailsPage({required this.character, required this.vision});
 
   @override
   CharactersDetailsPageState createState() =>
-      CharactersDetailsPageState(character: character);
+      CharactersDetailsPageState(character: character, vision: vision);
 }
 
 class CharactersDetailsPageState extends State<CharactersDetailsPage> {
   final String character;
-  String portrait = '';
+  final String vision;
   final Logger logger = Logger();
 
-  CharactersDetailsPageState({required this.character});
+  CharactersDetailsPageState({required this.character, required this.vision});
 
   Future<String> fetchPortrait() async {
     try {
@@ -45,8 +47,9 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: getVisionColor(vision),
       appBar: AppBar(
-        title: Text(character),
+        backgroundColor: Color(0xff002c58),
       ),
       body: Center(
         child: FutureBuilder<String>(
@@ -56,18 +59,20 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
               return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-              return Image.network(
-                snapshot.data!,
-                width: 400,
-                height: 400,
-              );
             } else {
-              return Image.asset(
-                'assets/portrait_empty.png',
-                width: 400,
-                height: 400,
-              );
+              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                return Image.network(
+                  snapshot.data!,
+                  width: 400,
+                  height: 400,
+                );
+              } else {
+                return Image.asset(
+                  'assets/portrait_empty.png',
+                  width: 400,
+                  height: 400,
+                );
+              }
             }
           },
         ),

@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
-import 'routes.dart';
-import 'home.dart';
-import 'appbar.dart';
 
 class BattleBodyPage extends StatelessWidget {
+
+  List<dynamic> enemiesData = ["abyss-mage", ];
+
+
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('hello'),
+      child: TextButton(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          backgroundColor: MaterialStateProperty.all<Color>(Color(0xff18596b)),
+        ),
+        onPressed: () {},
+        child: Text('Battle'),
+      ),
     );
   }
 }
+

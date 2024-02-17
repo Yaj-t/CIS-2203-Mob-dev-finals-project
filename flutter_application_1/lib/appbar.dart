@@ -23,12 +23,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           const SizedBox(width: 8),
-          const Text(
-            "Dashboard",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
         ],
       ),
       automaticallyImplyLeading: false,
