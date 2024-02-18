@@ -117,18 +117,47 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                     SizedBox(height: 10),
                     visionWidget,
                     SizedBox(height: 10),
-                    buildAscensionMaterialRow(
-                        'Sliver', ascensionMaterials['sliver'] ?? {}),
-                    buildAscensionMaterialRow(
-                        'Fragment', ascensionMaterials['fragment'] ?? {}),
-                    buildAscensionMaterialRow(
-                        'Chunk', ascensionMaterials['chunk'] ?? {}),
-                    buildAscensionMaterialRow(
-                        'Gemstone', ascensionMaterials['gemstone'] ?? {}),
+                    Container(
+                      height: 150,
+                      width: 350,
+                      decoration: BoxDecoration(
+                          color: getVisionColor(vision),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Column(
+                        children: [
+                          buildAscensionMaterialRow(
+                              'Sliver', ascensionMaterials['sliver'] ?? {}),
+                          buildAscensionMaterialRow(
+                              'Fragment', ascensionMaterials['fragment'] ?? {}),
+                          buildAscensionMaterialRow(
+                              'Chunk', ascensionMaterials['chunk'] ?? {}),
+                          buildAscensionMaterialRow(
+                              'Gemstone', ascensionMaterials['gemstone'] ?? {}),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 10),
-                    buildBossMaterialRow(bossMaterial),
+                    Container(
+                      height: 40,
+                      width: 350,
+                      decoration: BoxDecoration(
+                          color: getVisionColor(vision),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Column(children: [
+                        buildBossMaterialRow(bossMaterial),
+                      ]),
+                    ),
                     SizedBox(height: 10),
-                    buildLocalMaterialRow(localMaterial),
+                    Container(
+                      height: 40,
+                      width: 350,
+                      decoration: BoxDecoration(
+                          color: getVisionColor(vision),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Column(children: [
+                        buildLocalMaterialRow(localMaterial),
+                      ]),
+                    ),
                     SizedBox(height: 10),
                     buildCommonMaterialRow(commonMaterial),
                     SizedBox(height: 10),
