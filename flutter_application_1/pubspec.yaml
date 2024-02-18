@@ -66,13 +66,7 @@ flutter:
     - assets/paimon_logo.png
     - assets/paimon_empty.png
     - assets/portrait_empty.png
-    - assets/Element_Anemo.svg
-    # - assets/Element_Cryo.svg
-    # - assets/Element_Dendro.svg
-    # - assets/Element_Electro.svg
-    # - assets/Element_Geo.svg
-    # - assets/Element_Hydro.svg
-    # - assets/Element_Pyro.svg
+
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -31,6 +31,28 @@ class ApiService {
     return '';
   }
 
+  Future<String> fetchVisionIcon(String vision) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://genshin.jmp.blue/elements/${vision.toLowerCase()}/icon'));
+
+      if (response.statusCode == 200) {
+        final visionResponse = await http.get(Uri.parse(
+            'https://genshin.jmp.blue/elements/${vision.toLowerCase()}/icon'));
+        
+        if (visionResponse.statusCode != 404) {
+          return 'https://genshin.jmp.blue/elements/${vision.toLowerCase()}/icon';
+        }
+      } else {
+        throw Exception('Failed to load data for $vision icon');
+      }
+    } catch (e) {
+      return '';
+    }
+
+    return '';
+  }
+
   Future<Map<String, dynamic>> fetchAscensionMaterials(String vision) async {
     try {
       final response = await http.get(

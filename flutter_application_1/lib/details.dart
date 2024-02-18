@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'apiservice.dart';
 import 'color.dart';
@@ -36,6 +35,7 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
         child: FutureBuilder<List<dynamic>>(
           future: Future.wait([
             apiService.fetchPortrait(character),
+            apiService.fetchVisionIcon(vision),
             apiService.fetchAscensionMaterials(vision),
             apiService.fetchBossAscensionMaterials(character),
             apiService.fetchLocalAscensionMaterials(character),
@@ -51,7 +51,7 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
             } else {
               final List<dynamic> results = snapshot.data ?? [];
 
-              Widget imageWidget;
+              Widget imageWidget, visionWidget;
 
               if (results[0] != null && results[0].isNotEmpty) {
                 imageWidget = Image.network(
@@ -67,23 +67,37 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                 );
               }
 
+              if (results[1] != null && results[1].isNotEmpty) {
+                visionWidget = Image.network(
+                  results[1],
+                  width: 50,
+                  height: 50,
+                );
+              } else {
+                visionWidget = Image.asset(
+                  'assets/portrait_empty.png',
+                  width: 50,
+                  height: 50,
+                );
+              }
+
               final Map<String, dynamic> ascensionMaterials =
-                  results[1] as Map<String, dynamic>? ?? {};
+                  results[2] as Map<String, dynamic>? ?? {};
 
               final Map<String, String> bossMaterial =
-                  results[2] as Map<String, String>? ?? {};
-
-              final Map<String, String> localMaterial =
                   results[3] as Map<String, String>? ?? {};
 
+              final Map<String, String> localMaterial =
+                  results[4] as Map<String, String>? ?? {};
+
               final Map<String, dynamic> commonMaterial =
-                  results[4] as Map<String, dynamic>? ?? {};
+                  results[5] as Map<String, dynamic>? ?? {};
 
               final Map<String, String> weeklyBossMaterial =
-                  results[5] as Map<String, String>? ?? {};
+                  results[6] as Map<String, String>? ?? {};
 
               final Map<String, dynamic> talentMaterial =
-                  results[6] as Map<String, dynamic>? ?? {};
+                  results[7] as Map<String, dynamic>? ?? {};
 
               return SingleChildScrollView(
                 child: Column(
@@ -100,20 +114,17 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                         color: Color(0xff002c58),
                       ),
                     ),
-                    SvgPicture.asset(
-                      'assets/Element_$vision.svg',
-                      width: 50,
-                      height: 50,
-                    ),
                     SizedBox(height: 10),
-                    buildAscensionMaterialRow('Sliver',
-                        ascensionMaterials['sliver'] ?? {}),
-                    buildAscensionMaterialRow('Fragment',
-                        ascensionMaterials['fragment'] ?? {}), 
-                    buildAscensionMaterialRow('Chunk',
-                        ascensionMaterials['chunk'] ?? {}),
-                    buildAscensionMaterialRow('Gemstone',
-                        ascensionMaterials['gemstone'] ?? {}), 
+                    visionWidget,
+                    SizedBox(height: 10),
+                    buildAscensionMaterialRow(
+                        'Sliver', ascensionMaterials['sliver'] ?? {}),
+                    buildAscensionMaterialRow(
+                        'Fragment', ascensionMaterials['fragment'] ?? {}),
+                    buildAscensionMaterialRow(
+                        'Chunk', ascensionMaterials['chunk'] ?? {}),
+                    buildAscensionMaterialRow(
+                        'Gemstone', ascensionMaterials['gemstone'] ?? {}),
                     SizedBox(height: 10),
                     buildBossMaterialRow(bossMaterial),
                     SizedBox(height: 10),
