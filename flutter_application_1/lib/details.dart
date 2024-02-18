@@ -159,12 +159,53 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                       ]),
                     ),
                     SizedBox(height: 10),
-                    buildCommonMaterialRow(commonMaterial),
+                    Container(
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: getVisionColor(vision),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Column(
+                        children: [
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: 40, // Set a minimum height if needed
+                            ),
+                            child: buildCommonMaterialRow(commonMaterial),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 10),
-                    buildWeeklyBossMaterialRow(weeklyBossMaterial),
+                    Container(
+                      height: 40,
+                      width: 350,
+                      decoration: BoxDecoration(
+                          color: getVisionColor(vision),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Column(children: [
+                        buildWeeklyBossMaterialRow(weeklyBossMaterial),
+                      ]),
+                    ),
                     SizedBox(height: 10),
-                    buildTalentMaterialRow(talentMaterial),
-                    SizedBox(height: 10),
+                    Container(
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: getVisionColor(vision),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Column(
+                        children: [
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: 40, // Set a minimum height if needed
+                            ),
+                            child: buildTalentMaterialRow(talentMaterial),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
                   ],
                 ),
               );

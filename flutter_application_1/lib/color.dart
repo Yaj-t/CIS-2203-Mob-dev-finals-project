@@ -15,7 +15,7 @@ Color getVisionColor(String vision) {
     case 'Electro':
       return Colors.purple;
     case 'Cryo':
-      return Color(0xff49e8ff);
+      return Color(0xff4f93cc);
     default:
       return Colors.grey;
   }
@@ -36,7 +36,7 @@ Color getVisionSecondaryColor(String vision) {
     case 'Electro':
       return Colors.purple;
     case 'Cryo':
-      return Color(0xffc0f7ff);
+      return Color(0xffa1d0fc);
     default:
       return Colors.grey;
   }
