@@ -36,7 +36,6 @@ class CharacterBodyPageState extends State<CharacterBodyPage> {
         await Future.wait(fetchedCharactersData.map((characterName) =>
             fetchCharacterData(characterName, charactersByVision)));
 
-        // Sort visions alphabetically
         charactersByVision.forEach((vision, characterList) {
           characterList.sort();
         });
@@ -55,7 +54,7 @@ class CharacterBodyPageState extends State<CharacterBodyPage> {
           .get(Uri.parse('https://genshin.jmp.blue/characters/$characterName'));
 
       if (!mounted) {
-        return; // Check if the widget is still mounted before updating the state
+        return;
       }
 
       if (visionResponse.statusCode == 200) {
@@ -64,7 +63,7 @@ class CharacterBodyPageState extends State<CharacterBodyPage> {
         final iconResponse = await http.get(Uri.parse(
             'https://genshin.jmp.blue/characters/$characterName/icon-big'));
         if (!mounted) {
-          return; // Check if the widget is still mounted before updating the state
+          return;
         }
 
         if (iconResponse.statusCode != 404) {
@@ -89,7 +88,6 @@ class CharacterBodyPageState extends State<CharacterBodyPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Sort visions alphabetically
     List<MapEntry<String, List<String>>> sortedEntries =
         charactersByVision.entries.toList()
           ..sort((a, b) => a.key.compareTo(b.key));
@@ -104,6 +102,12 @@ class CharacterBodyPageState extends State<CharacterBodyPage> {
                 itemBuilder: (context, index) {
                   final vision = sortedEntries[index].key;
                   final characterNames = sortedEntries[index].value;
+
+                  String capitalize(String text) {
+                    return text.isNotEmpty
+                        ? text[0].toUpperCase() + text.substring(1)
+                        : text;
+                  }
 
                   return Container(
                     height: 275,
@@ -121,6 +125,7 @@ class CharacterBodyPageState extends State<CharacterBodyPage> {
                           child: Text(
                             '$vision Characters',
                             style: TextStyle(
+                              fontFamily: 'Genshin',
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                               color: Color(0xff002c58),
@@ -176,9 +181,10 @@ class CharacterBodyPageState extends State<CharacterBodyPage> {
                                             height: 5.0,
                                           ),
                                           Text(
-                                            characterName,
+                                            capitalize(characterName),
                                             style: TextStyle(
-                                              fontSize: 20,
+                                              fontFamily: 'Genshin',
+                                              fontSize: 18,
                                               fontWeight: FontWeight.bold,
                                               color: Color(0xff002c58),
                                             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BattleBodyPage extends StatelessWidget {
+class MaterialsBodyPage extends StatelessWidget {
 
   List<dynamic> enemiesData = ["abyss-mage", ];
 

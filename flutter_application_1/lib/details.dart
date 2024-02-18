@@ -137,26 +137,38 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    Container(
-                      height: 40,
-                      width: 350,
-                      decoration: BoxDecoration(
+                    Center(
+                      child: Container(
+                        height: 50,
+                        width: 350,
+                        decoration: BoxDecoration(
                           color: getVisionColor(vision),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Column(children: [
-                        buildBossMaterialRow(bossMaterial),
-                      ]),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            buildBossMaterialRow(bossMaterial),
+                          ],
+                        ),
+                      ),
                     ),
                     SizedBox(height: 10),
-                    Container(
-                      height: 40,
-                      width: 350,
-                      decoration: BoxDecoration(
+                    Center(
+                      child: Container(
+                        height: 50,
+                        width: 350,
+                        decoration: BoxDecoration(
                           color: getVisionColor(vision),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Column(children: [
-                        buildLocalMaterialRow(localMaterial),
-                      ]),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            buildLocalMaterialRow(localMaterial),
+                          ],
+                        ),
+                      ),
                     ),
                     SizedBox(height: 10),
                     Container(
@@ -177,15 +189,21 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    Container(
-                      height: 40,
-                      width: 350,
-                      decoration: BoxDecoration(
+                    Center(
+                      child: Container(
+                        height: 50,
+                        width: 350,
+                        decoration: BoxDecoration(
                           color: getVisionColor(vision),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Column(children: [
-                        buildWeeklyBossMaterialRow(weeklyBossMaterial),
-                      ]),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            buildWeeklyBossMaterialRow(weeklyBossMaterial),
+                          ],
+                        ),
+                      ),
                     ),
                     SizedBox(height: 10),
                     Container(

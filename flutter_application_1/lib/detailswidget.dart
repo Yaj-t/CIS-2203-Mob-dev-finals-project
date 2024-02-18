@@ -177,6 +177,7 @@ Widget buildCommonMaterialRow(Map<String, dynamic>? commonMaterial) {
       children: [
         SizedBox(height: 7),
         Text('Common Materials:'),
+        SizedBox(width: 10),
         SizedBox(height: 7),
         Column(
           children: itemsWidgets,
@@ -185,29 +186,43 @@ Widget buildCommonMaterialRow(Map<String, dynamic>? commonMaterial) {
       ],
     );
   } else {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(height: 3),
-        RichText(
-          text: TextSpan(
-            text: 'Common Materials: ',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.black,
-            ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextSpan(
-                text: 'Not yet updated',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xff002c58), // Change the color here
+              RichText(
+                text: TextSpan(
+                  text: 'Common Materials:   ',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: 'Not yet updated',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xff002c58), // Change the color here
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                  'assets/portrait_empty.png',
+                  width: 35,
+                  height: 35,
                 ),
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -221,7 +236,7 @@ Widget buildWeeklyBossMaterialRow(Map<String, String> weeklyBossMaterial) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Text('Local Material:'),
+      Text('Weekly Material:'),
       SizedBox(width: 10),
       weeklyBossMaterial['name'] != null
           ? Text(

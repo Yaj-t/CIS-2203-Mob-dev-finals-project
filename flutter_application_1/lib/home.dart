@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'character.dart';
-import 'battle.dart';
+import 'materials.dart';
 import 'appbar.dart';
 import 'routes.dart';
 
@@ -23,7 +23,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   List<Widget> body = [
     CharacterBodyPage(),
-    BattleBodyPage(),
+    MaterialsBodyPage(),
     Container(
       color: Colors.blue,
       child: Center(child: Text('Person Tab')),
