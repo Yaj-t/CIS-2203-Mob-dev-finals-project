@@ -37,6 +37,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  contactus: ^1.2.3
 
 dev_dependencies:
   flutter_test:
@@ -66,8 +67,8 @@ flutter:
     - assets/paimon_logo.png
     - assets/paimon_empty.png
     - assets/portrait_empty.png
-
-    
+    - assets/genshin_paimon_about.png
+    - assets/developer1.jpg    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

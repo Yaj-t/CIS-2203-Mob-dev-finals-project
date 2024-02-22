@@ -12,15 +12,23 @@ Widget buildAscensionMaterialRow(
     children: [
       Text('$materialType:'),
       SizedBox(width: 10),
-      Text(
-        '${materialData?['name'] ?? 'Not yet updated'}',
-        style: TextStyle(
-          fontSize: 14,
-          color: Color(0xff002c58),
-        ),
-      ),
+      materialData?['name'] != null
+          ? Text(
+              '${materialData?['name']}',
+              style: TextStyle(
+                fontSize: 14,
+                color: Color(0xff002c58),
+              ),
+            )
+          : Text(
+              'Not yet updated',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+              ),
+            ),
       SizedBox(width: 10),
-      // Check if materialName is null, and display the appropriate image
+
       materialName != null
           ? Image.network(
               'https://genshin.jmp.blue/materials/character-ascension/$materialName',
@@ -57,7 +65,7 @@ Widget buildBossMaterialRow(Map<String, String> bossMaterial) {
               'Not yet updated',
               style: TextStyle(
                 fontSize: 14,
-                color: Color(0xff002c58),
+                color: Colors.white,
               ),
             ),
       SizedBox(width: 10),
@@ -97,7 +105,7 @@ Widget buildLocalMaterialRow(Map<String, String> localMaterial) {
               'Not yet updated',
               style: TextStyle(
                 fontSize: 14,
-                color: Color(0xff002c58),
+                color: Colors.white,
               ),
             ),
       SizedBox(width: 10),
@@ -141,7 +149,7 @@ Widget buildCommonMaterialRow(Map<String, dynamic>? commonMaterial) {
                             text: '$itemName',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Color(0xff002c58), // Change the color here
+                              color: Color(0xff002c58), 
                             ),
                           ),
                         ],
@@ -151,7 +159,7 @@ Widget buildCommonMaterialRow(Map<String, dynamic>? commonMaterial) {
                       'Not yet updated',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xff002c58),
+                        color: Colors.white,
                       ),
                     ),
               SizedBox(height: 10),
@@ -205,7 +213,7 @@ Widget buildCommonMaterialRow(Map<String, dynamic>? commonMaterial) {
                       text: 'Not yet updated',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xff002c58), // Change the color here
+                        color: Colors.white,
                       ),
                     ),
                   ],
@@ -250,7 +258,7 @@ Widget buildWeeklyBossMaterialRow(Map<String, String> weeklyBossMaterial) {
               'Not yet updated',
               style: TextStyle(
                 fontSize: 14,
-                color: Color(0xff002c58),
+                color: Colors.white,
               ),
             ),
       SizedBox(width: 10),
@@ -294,7 +302,7 @@ Widget buildTalentMaterialRow(Map<String, dynamic>? talentMaterial) {
                             text: '$itemName',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Color(0xff002c58), // Change the color here
+                              color: Color(0xff002c58),
                             ),
                           ),
                         ],
@@ -304,7 +312,7 @@ Widget buildTalentMaterialRow(Map<String, dynamic>? talentMaterial) {
                       'Not yet updated',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xff002c58),
+                        color: Colors.white,
                       ),
                     ),
               SizedBox(height: 10),
@@ -338,10 +346,9 @@ Widget buildTalentMaterialRow(Map<String, dynamic>? talentMaterial) {
       ],
     );
   } else {
-    return Column(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(height: 3),
         RichText(
           text: TextSpan(
             text: 'Talent Materials: ',
@@ -354,11 +361,17 @@ Widget buildTalentMaterialRow(Map<String, dynamic>? talentMaterial) {
                 text: 'Not yet updated',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xff002c58), // Change the color here
+                  color: Colors.white,
                 ),
               ),
             ],
           ),
+        ),
+        SizedBox(width: 5), 
+        Image.asset(
+          'assets/portrait_empty.png',
+          width: 35,
+          height: 35,
         ),
       ],
     );

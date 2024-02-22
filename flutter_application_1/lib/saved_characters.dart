@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
 class MaterialsBodyPage extends StatelessWidget {
-
-  List<dynamic> enemiesData = ["abyss-mage", ];
-
-
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -15,9 +10,8 @@ class MaterialsBodyPage extends StatelessWidget {
           backgroundColor: MaterialStateProperty.all<Color>(Color(0xff18596b)),
         ),
         onPressed: () {},
-        child: Text('Battle'),
+        child: Text('Saved Character'),
       ),
     );
   }
 }
-

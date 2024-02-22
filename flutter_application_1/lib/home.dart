@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'character.dart';
-import 'materials.dart';
+import 'saved_characters.dart';
 import 'appbar.dart';
 import 'routes.dart';
+import 'about.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -24,10 +25,7 @@ class HomeScreenState extends State<HomeScreen> {
   List<Widget> body = [
     CharacterBodyPage(),
     MaterialsBodyPage(),
-    Container(
-      color: Colors.blue,
-      child: Center(child: Text('Person Tab')),
-    ),
+    AboutBodyPage(),
   ];
 
   @override
@@ -47,16 +45,16 @@ class HomeScreenState extends State<HomeScreen> {
         },
         items: const [
           BottomNavigationBarItem(
-            label: 'Characters',
+            label: 'Dashboard',
+            icon: Icon(Icons.dashboard),
+          ),
+          BottomNavigationBarItem(
+            label: 'Saved Characters',
             icon: Icon(Icons.person),
           ),
           BottomNavigationBarItem(
-            label: 'Battle',
-            icon: Icon(Icons.download),
-          ),
-          BottomNavigationBarItem(
-            label: 'Person',
-            icon: Icon(Icons.person),
+            label: 'About Us',
+            icon: Icon(Icons.info),
           ),
         ],
       ),

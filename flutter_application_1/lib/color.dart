@@ -41,3 +41,4 @@ Color getVisionSecondaryColor(String vision) {
       return Colors.grey;
   }
 }
+

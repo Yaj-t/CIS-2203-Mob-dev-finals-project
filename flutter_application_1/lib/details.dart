@@ -216,7 +216,7 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                         children: [
                           ConstrainedBox(
                             constraints: BoxConstraints(
-                              minHeight: 40, // Set a minimum height if needed
+                              minHeight: 40,
                             ),
                             child: buildTalentMaterialRow(talentMaterial),
                           ),
@@ -224,6 +224,30 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                       ),
                     ),
                     SizedBox(height: 20),
+                    Container(
+                      width: 350,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Save character sa lain na page
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xff002c58), // Use a darker color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        child: Text(
+                          'Save Character',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 25),
                   ],
                 ),
               );
