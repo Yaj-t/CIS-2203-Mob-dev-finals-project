@@ -231,10 +231,13 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                         onPressed: () {
                           // Save character sa lain na page
                         },
-                        style: ElevatedButton.styleFrom(
-                          primary: Color(0xff002c58), // Use a darker color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Color(0xff002c58)),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                         ),
                         child: Text(

@@ -110,7 +110,7 @@ class CharacterBodyPageState extends State<CharacterBodyPage> {
                   }
 
                   return Container(
-                    height: 275,
+                    height: 280,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

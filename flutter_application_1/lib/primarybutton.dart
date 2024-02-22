@@ -22,7 +22,6 @@ class PrimaryButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        primary: buttonColor, // Set the button color here
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
