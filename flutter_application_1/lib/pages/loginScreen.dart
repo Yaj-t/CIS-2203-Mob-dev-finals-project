@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'customtextformfield.dart';
-import 'primarybutton.dart';
-import 'passwordfield.dart';
-import 'package:flutter_application_1/home.dart';
+import '../components/customtextformfield.dart';
+import '../components/primarybutton.dart';
+import '../components/passwordfield.dart';
+import 'package:flutter_application_1/pages/home.dart';
 import 'package:flutter/gestures.dart';
 
 class LoginScreen extends StatelessWidget {

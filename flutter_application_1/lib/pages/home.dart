@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'character.dart';
 import 'saved_characters.dart';
-import 'appbar.dart';
-import 'routes.dart';
+import '../components/appbar.dart';
+import '../routes.dart';
 import 'about.dart';
 
 void main() {

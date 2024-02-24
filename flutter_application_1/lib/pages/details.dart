@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-import 'apiservice.dart';
-import 'color.dart';
+import '../services/apiservice.dart';
+import '../styles/color.dart';
 import 'detailswidget.dart';
 
 class CharactersDetailsPage extends StatefulWidget {
