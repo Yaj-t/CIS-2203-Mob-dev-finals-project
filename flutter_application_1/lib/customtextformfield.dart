@@ -37,13 +37,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
         ),
         hintText: widget.hintText,
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(
             color: Color(0xFF808080),
           ),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(
             color: Color(0xff002c58),
