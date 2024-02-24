@@ -6,7 +6,15 @@ import 'primarybutton.dart';
 import 'passwordfield.dart';
 import 'routes.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MaterialApp(
     home: LoginScreen(),
     routes: routes,
@@ -53,7 +61,7 @@ class LoginScreenState extends State<LoginScreenBody> {
                   height: 20.0,
                 ),
                 const Text(
-                  'Sign Up',
+                  'Login',
                   style: TextStyle(
                       fontSize: 30.0,
                       fontWeight: FontWeight.w800,
@@ -74,6 +82,7 @@ class LoginScreenState extends State<LoginScreenBody> {
                 PasswordField(
                   labelText: "Password",
                   hintText: "Enter your password",
+                  iconData: Icons.lock,
                   obscureText: obscureText,
                   onTap: setPasswordVisibility,
                 ),
