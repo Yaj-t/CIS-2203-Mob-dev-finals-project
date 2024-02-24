@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'loginScreen.dart';
 import 'home.dart';
 
 final Map<String, WidgetBuilder> routes = {
