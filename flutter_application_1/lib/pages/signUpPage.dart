@@ -1,104 +1,177 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'loginScreen.dart'; // Ensure this import is correct
+import '../components/customtextformfield.dart'; // Ensure these imports are correct
+import '../components/primarybutton.dart';
+import '../components/passwordfield.dart';
 
-class SignUpPage extends StatefulWidget {
-  @override
+class SignupPage extends StatelessWidget {
   static const String routeName = "signup";
-  _SignUpPageState createState() => _SignUpPageState();
-}
-
-class _SignUpPageState extends State<SignUpPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  // Add a state variable to track form submission in progress
-  bool _isSubmitting = false;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _signUp() async {
-    setState(() {
-      _isSubmitting = true;
-    });
-
-    try {
-      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-
-      // Handle successful sign-up (e.g., navigate to a different screen)
-      print('Signed up user with UID: ${userCredential.user!.uid}');
-      Navigator.pushNamed(context, '/home'); // Replace with your desired route
-
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      } else {
-        print(e);
-      }
-    } finally {
-      setState(() {
-        _isSubmitting = false;
-      });
-    }
-  }
+  const SignupPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sign Up'),
+      body: Center(
+        child: SignupScreenBody(),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
+      bottomNavigationBar: SignupFooter(),
+    );
+  }
+}
+
+class SignupScreenBody extends StatefulWidget {
+  @override
+  State<SignupScreenBody> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreenBody> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  bool obscureText = true;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.green[200],
+        body: Container(
+          color: Color(0xFFFFF5E1),
+          alignment: Alignment.topCenter,
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                WebsiteLogo(),
+                const Text(
+                  'Sign Up',
+                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w800, color: Color(0xff002c58)),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email address.';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 10.0),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
+                const SizedBox(height: 20.0),
+                CustomTextFormField(
+                  labelText: "Email Address",
+                  hintText: "Enter a valid email",
+                  iconData: Icons.email,
+                  textInputType: TextInputType.emailAddress,
+                  controller: emailController,
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password.';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: _isSubmitting ? null : _signUp,
-                child: Text(_isSubmitting ? 'Submitting...' : 'Sign Up'),
-              ),
-            ],
+                const SizedBox(height: 20.0),
+                PasswordField(
+                  labelText: "Password",
+                  hintText: "Enter your password",
+                  iconData: Icons.lock,
+                  obscureText: obscureText,
+                  onTap: setPasswordVisibility,
+                  controller: passwordController,
+                ),
+                const SizedBox(height: 20.0),
+                PasswordField(
+                  labelText: "Confirm Password",
+                  hintText: "Re-enter your password",
+                  iconData: Icons.lock,
+                  obscureText: obscureText,
+                  onTap: setPasswordVisibility,
+                  controller: confirmPasswordController,
+                ),
+                const SizedBox(height: 20.0),
+                PrimaryButton(
+                  text: "Sign Up",
+                  iconData: Icons.person_add,
+                  onPressed: signup,
+                ),
+                const SizedBox(height: 20.0),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  void signup() async {
+    if (passwordController.text == confirmPasswordController.text) {
+      showDialog(
+        context: context,
+        barrierDismissible: false, // Prevent dialog from closing on tap
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+        Navigator.pop(context); // Close the dialog
+        // Navigate to the next screen if signup is successful
+        Navigator.pop(context);
+      } on FirebaseAuthException {
+        Navigator.pop(context); // Close the dialog
+        // Handle signup error
+        final errorMessage = 'Failed to sign up. Please try again.';
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+      }
+    } else {
+      // Handle password mismatch
+      final errorMessage = 'Passwords do not match.';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+    }
+  }
+
+  void setPasswordVisibility() {
+    setState(() {
+      obscureText = !obscureText;
+    });
+  }
+}
+
+class SignupFooter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Color(0xFFFFF5E1),
+      height: 35.0,
+      child: Text.rich(
+        TextSpan(
+          text: 'Already a member?',
+          style: TextStyle(color: Color(0xff002c58), fontSize: 17.0),
+          children: <TextSpan>[
+            TextSpan(
+              text: ' Login here',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xff18596b)),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.pop(context);
+                },
+            ),
+          ],
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class WebsiteLogo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 10.0),
+        Image.asset(
+          'assets/website_logo.png',
+          width: 300.0,
+          height: 300.0,
+        ),
+      ],
     );
   }
 }

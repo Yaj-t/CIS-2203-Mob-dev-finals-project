@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application_1/pages/signUppage.dart'; // Ensure this import is correct
+import 'package:flutter_application_1/pages/home.dart';
+import 'signupPage.dart'; // Ensure this import is correct
 import '../components/customtextformfield.dart'; // Ensure these imports are correct
 import '../components/primarybutton.dart';
 import '../components/passwordfield.dart';
@@ -101,7 +102,8 @@ class _LoginScreenState extends State<LoginScreenBody> {
       );
       Navigator.pop(context); // Close the dialog
       // Navigate to the next screen if login is successful
-    } on FirebaseAuthException catch (e) {
+      Navigator.pushNamed(context, HomeScreen.routeName);
+    } on FirebaseAuthException {
       Navigator.pop(context); // Close the dialog
       // Handle login error
       final errorMessage = 'Invalid Email or Password';
@@ -128,11 +130,11 @@ class LoginFooter extends StatelessWidget {
           style: TextStyle(color: Color(0xff002c58), fontSize: 17.0),
           children: <TextSpan>[
             TextSpan(
-              text: ' Register now',
+              text: 'Signup now',
               style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xff18596b)),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  Navigator.pushNamed(context, SignUpPage.routeName);
+                  Navigator.pushNamed(context, SignupPage.routeName);
                 },
             ),
           ],

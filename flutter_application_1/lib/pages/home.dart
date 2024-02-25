@@ -4,6 +4,7 @@ import 'saved_characters.dart';
 import '../components/appbar.dart';
 import '../routes.dart';
 import 'about.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -14,6 +15,8 @@ void main() {
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = "home";
+
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   HomeScreenState createState() => HomeScreenState();
