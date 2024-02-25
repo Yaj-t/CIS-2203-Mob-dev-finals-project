@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'routes.dart';
 import 'pages/loginScreen.dart';
-import 'pages/signUpScreen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';

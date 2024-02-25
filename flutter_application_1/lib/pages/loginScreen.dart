@@ -6,6 +6,7 @@ import 'signupPage.dart'; // Ensure this import is correct
 import '../components/customtextformfield.dart'; // Ensure these imports are correct
 import '../components/primarybutton.dart';
 import '../components/passwordfield.dart';
+import '../components/websiteLogo.dart';
 
 class LoginScreen extends StatelessWidget {
   static const String routeName = "login";
@@ -81,6 +82,47 @@ class _LoginScreenState extends State<LoginScreenBody> {
                   onPressed: login,
                 ),
                 const SizedBox(height: 20.0),
+                
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
+                          'Or continue with',
+                          style: TextStyle(
+                            fontSize: 15, 
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff002c58)
+                          ),
+                        )
+                      ),
+
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+
+                const SizedBox(height: 20.0),
+
+                Image.asset(
+                  'assets/google.png',
+                  width: 50.0,
+                  height: 50.0,
+                ),
               ],
             ),
           ),
@@ -145,18 +187,4 @@ class LoginFooter extends StatelessWidget {
   }
 }
 
-class WebsiteLogo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 10.0),
-        Image.asset(
-          'assets/website_logo.png',
-          width: 300.0,
-          height: 300.0,
-        ),
-      ],
-    );
-  }
-}
+
