@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import '../components/customtextformfield.dart'; // Ensure these imports are cor
 import '../components/primarybutton.dart';
 import '../components/passwordfield.dart';
 import '../components/websiteLogo.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
 class LoginScreen extends StatelessWidget {
   static const String routeName = "login";
@@ -31,6 +33,7 @@ class LoginScreenBody extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreenBody> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final FirebaseAuth auth = FirebaseAuth.instance;
   bool obscureText = true;
 
   @override
@@ -118,11 +121,12 @@ class _LoginScreenState extends State<LoginScreenBody> {
 
                 const SizedBox(height: 20.0),
 
-                Image.asset(
-                  'assets/google.png',
-                  width: 50.0,
-                  height: 50.0,
-                ),
+                SignInButton(Buttons.google, onPressed: handleGoogleSignIn)
+                // Image.asset(
+                //   'assets/google.png',
+                //   width: 50.0,
+                //   height: 50.0,
+                // ),
               ],
             ),
           ),
@@ -150,6 +154,17 @@ class _LoginScreenState extends State<LoginScreenBody> {
       // Handle login error
       final errorMessage = 'Invalid Email or Password';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+    }
+  }
+
+  void handleGoogleSignIn() {
+    try{
+      GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
+      FirebaseAuth.instance.signInWithProvider(_googleAuthProvider);
+    } catch (e){
+      print('error');
+      print(e);
+      print('error');
     }
   }
 
