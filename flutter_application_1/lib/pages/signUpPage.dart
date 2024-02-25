@@ -5,6 +5,7 @@ import 'loginScreen.dart'; // Ensure this import is correct
 import '../components/customtextformfield.dart'; // Ensure these imports are correct
 import '../components/primarybutton.dart';
 import '../components/passwordfield.dart';
+import '../components/websiteLogo.dart';
 
 class SignupPage extends StatelessWidget {
   static const String routeName = "signup";
@@ -156,22 +157,6 @@ class SignupFooter extends StatelessWidget {
         ),
         textAlign: TextAlign.center,
       ),
-    );
-  }
-}
-
-class WebsiteLogo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 10.0),
-        Image.asset(
-          'assets/website_logo.png',
-          width: 300.0,
-          height: 300.0,
-        ),
-      ],
     );
   }
 }
