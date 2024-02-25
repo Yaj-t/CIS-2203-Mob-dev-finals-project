@@ -6,6 +6,7 @@ import 'pages/signUppage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'pages/auth_page.dart';
 
 
 void main() async {
@@ -14,7 +15,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MaterialApp(
-    home: const LoginScreen(),
+    home: AuthPage(),
     routes: routes,
   ));
 }

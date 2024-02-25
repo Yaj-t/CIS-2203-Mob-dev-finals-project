@@ -3,8 +3,8 @@ import 'package:flutter_application_1/pages/signUppage.dart';
 import '../components/customtextformfield.dart';
 import '../components/primarybutton.dart';
 import '../components/passwordfield.dart';
-import 'package:flutter_application_1/pages/home.dart';
 import 'package:flutter/gestures.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatelessWidget {
   static const String routeName = "login";
@@ -22,7 +22,7 @@ class LoginScreen extends StatelessWidget {
 }
 
 class LoginScreenBody extends StatefulWidget {
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   @override
   State<LoginScreenBody> createState() => LoginScreenState();
@@ -62,7 +62,7 @@ class LoginScreenState extends State<LoginScreenBody> {
                   hintText: "Enter a valid email",
                   iconData: Icons.email,
                   textInputType: TextInputType.emailAddress,
-                  controller: widget.usernameController,
+                  controller: widget.emailController,
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -94,10 +94,30 @@ class LoginScreenState extends State<LoginScreenBody> {
     );
   }
 
-  void login() {
-    print(widget.usernameController.text);
-    print(widget.passwordController.text);
-    // Navigator.pushNamed(context, HomeScreen.routeName);
+  void login() async {
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+    );
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: widget.emailController.text, 
+        password: widget.passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      if(e.code == 'user-not-found'){
+        print('No user found for that email');
+      }else if (e.code == 'wrong-password'){
+        print('wrong password buddy');
+      }
+    }
+    
+    Navigator.pop(context);
   }
 
   void setPasswordVisibility() {
