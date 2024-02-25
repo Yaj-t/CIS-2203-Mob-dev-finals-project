@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/signUppage.dart';
-import '../components/customtextformfield.dart';
-import '../components/primarybutton.dart';
-import '../components/passwordfield.dart';
 import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/pages/signUppage.dart'; // Ensure this import is correct
+import '../components/customtextformfield.dart'; // Ensure these imports are correct
+import '../components/primarybutton.dart';
+import '../components/passwordfield.dart';
 
 class LoginScreen extends StatelessWidget {
   static const String routeName = "login";
@@ -22,14 +22,21 @@ class LoginScreen extends StatelessWidget {
 }
 
 class LoginScreenBody extends StatefulWidget {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
   @override
-  State<LoginScreenBody> createState() => LoginScreenState();
+  State<LoginScreenBody> createState() => _LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreenBody> {
+class _LoginScreenState extends State<LoginScreenBody> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   bool obscureText = true;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,49 +50,36 @@ class LoginScreenState extends State<LoginScreenBody> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                website_logo(),
-                const SizedBox(
-                  height: 20.0,
-                ),
+                WebsiteLogo(),
+                const SizedBox(height: 20.0),
                 const Text(
                   'Login',
-                  style: TextStyle(
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xff002c58)),
+                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w800, color: Color(0xff002c58)),
                 ),
-                const SizedBox(
-                  height: 20.0,
-                ),
+                const SizedBox(height: 20.0),
                 CustomTextFormField(
                   labelText: "Email Address",
                   hintText: "Enter a valid email",
                   iconData: Icons.email,
                   textInputType: TextInputType.emailAddress,
-                  controller: widget.emailController,
+                  controller: emailController,
                 ),
-                const SizedBox(
-                  height: 20.0,
-                ),
+                const SizedBox(height: 20.0),
                 PasswordField(
                   labelText: "Password",
                   hintText: "Enter your password",
                   iconData: Icons.lock,
                   obscureText: obscureText,
                   onTap: setPasswordVisibility,
-                  controller: widget.passwordController,
+                  controller: passwordController,
                 ),
-                const SizedBox(
-                  height: 20.0,
-                ),
+                const SizedBox(height: 20.0),
                 PrimaryButton(
                   text: "Login",
                   iconData: Icons.login,
                   onPressed: login,
                 ),
-                const SizedBox(
-                  height: 20.0,
-                ),
+                const SizedBox(height: 20.0),
               ],
             ),
           ),
@@ -95,29 +89,24 @@ class LoginScreenState extends State<LoginScreenBody> {
   }
 
   void login() async {
-
     showDialog(
       context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
+      barrierDismissible: false, // Prevent dialog from closing on tap
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: widget.emailController.text, 
-        password: widget.passwordController.text,
+        email: emailController.text,
+        password: passwordController.text,
       );
+      Navigator.pop(context); // Close the dialog
+      // Navigate to the next screen if login is successful
     } on FirebaseAuthException catch (e) {
-      if(e.code == 'user-not-found'){
-        print('No user found for that email');
-      }else if (e.code == 'wrong-password'){
-        print('wrong password buddy');
-      }
+      Navigator.pop(context); // Close the dialog
+      // Handle login error
+      final errorMessage = 'Invalid Email or Password';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
     }
-    
-    Navigator.pop(context);
   }
 
   void setPasswordVisibility() {
@@ -136,22 +125,14 @@ class LoginFooter extends StatelessWidget {
       child: Text.rich(
         TextSpan(
           text: 'Not yet a member?',
-          style: TextStyle(
-            color: Color(0xff002c58),
-            fontSize: 17.0,
-          ),
+          style: TextStyle(color: Color(0xff002c58), fontSize: 17.0),
           children: <TextSpan>[
             TextSpan(
               text: ' Register now',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xff18596b),
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xff18596b)),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  // Correctly navigates to the SignUpPage when tapped
                   Navigator.pushNamed(context, SignUpPage.routeName);
-                  print("tapped");
                 },
             ),
           ],
@@ -162,8 +143,7 @@ class LoginFooter extends StatelessWidget {
   }
 }
 
-
-class website_logo extends StatelessWidget {
+class WebsiteLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
