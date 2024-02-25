@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/signUppage.dart';
 import '../components/customtextformfield.dart';
 import '../components/primarybutton.dart';
 import '../components/passwordfield.dart';
@@ -21,6 +22,8 @@ class LoginScreen extends StatelessWidget {
 }
 
 class LoginScreenBody extends StatefulWidget {
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   State<LoginScreenBody> createState() => LoginScreenState();
 }
@@ -54,11 +57,12 @@ class LoginScreenState extends State<LoginScreenBody> {
                 const SizedBox(
                   height: 20.0,
                 ),
-                const CustomTextFormField(
+                CustomTextFormField(
                   labelText: "Email Address",
                   hintText: "Enter a valid email",
                   iconData: Icons.email,
                   textInputType: TextInputType.emailAddress,
+                  controller: widget.usernameController,
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -69,6 +73,7 @@ class LoginScreenState extends State<LoginScreenBody> {
                   iconData: Icons.lock,
                   obscureText: obscureText,
                   onTap: setPasswordVisibility,
+                  controller: widget.passwordController,
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -90,7 +95,9 @@ class LoginScreenState extends State<LoginScreenBody> {
   }
 
   void login() {
-    Navigator.pushNamed(context, HomeScreen.routeName);
+    print(widget.usernameController.text);
+    print(widget.passwordController.text);
+    // Navigator.pushNamed(context, HomeScreen.routeName);
   }
 
   void setPasswordVisibility() {
@@ -122,7 +129,9 @@ class LoginFooter extends StatelessWidget {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  print('Register now tapped!');
+                  // Correctly navigates to the SignUpPage when tapped
+                  Navigator.pushNamed(context, SignUpPage.routeName);
+                  print("tapped");
                 },
             ),
           ],
@@ -132,6 +141,7 @@ class LoginFooter extends StatelessWidget {
     );
   }
 }
+
 
 class website_logo extends StatelessWidget {
   @override

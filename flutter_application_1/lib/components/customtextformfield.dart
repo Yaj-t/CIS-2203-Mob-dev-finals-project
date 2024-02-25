@@ -5,12 +5,14 @@ class CustomTextFormField extends StatefulWidget {
   final String hintText;
   final IconData iconData;
   final TextInputType textInputType;
+  final controller;
 
   const CustomTextFormField({
     required this.labelText,
     required this.hintText,
     required this.iconData,
     required this.textInputType,
+    required this.controller,
   });
 
   @override
@@ -23,6 +25,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
       keyboardType: widget.textInputType,
       decoration: InputDecoration(
         prefixIcon: Container(

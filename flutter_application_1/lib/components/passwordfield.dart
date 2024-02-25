@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class PasswordField extends StatefulWidget {
@@ -6,6 +8,7 @@ class PasswordField extends StatefulWidget {
   final IconData iconData;
   final bool obscureText;
   final VoidCallback onTap;
+  final controller;
 
   PasswordField({
     Key? key,
@@ -14,6 +17,7 @@ class PasswordField extends StatefulWidget {
     required this.iconData,
     required this.obscureText,
     required this.onTap,
+    required this.controller,
   }) : super(key: key);
 
   @override
@@ -31,6 +35,7 @@ class _PasswordFieldState extends State<PasswordField> {
 
     return TextFormField(
       obscureText: widget.obscureText,
+      controller: widget.controller,
       decoration: InputDecoration(
         prefixIcon: Icon(
           widget.iconData,
