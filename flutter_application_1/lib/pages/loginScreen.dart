@@ -149,11 +149,14 @@ class _LoginScreenState extends State<LoginScreenBody> {
       Navigator.pop(context); // Close the dialog
       // Navigate to the next screen if login is successful
       Navigator.pushNamed(context, HomeScreen.routeName);
-    } on FirebaseAuthException {
+    } on FirebaseAuthException catch(e) {
       Navigator.pop(context); // Close the dialog
       // Handle login error
-      final errorMessage = 'Invalid Email or Password';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
     }
   }
 
