@@ -114,10 +114,16 @@ class _SignupScreenState extends State<SignupScreenBody> {
         Navigator.pop(context); // Close the dialog
         // Navigate to the next screen if signup is successful
         Navigator.pop(context);
-      } on FirebaseAuthException {
+      } on FirebaseAuthException catch(e){
         Navigator.pop(context); // Close the dialog
-        // Handle signup error
-        final errorMessage = 'Failed to sign up. Please try again.';
+        final String errorMessage;
+        if (e.code == 'weak-password') {
+          errorMessage = 'The password provided is too weak.';
+        } else if (e.code == 'email-already-in-use') {
+          errorMessage = 'The account already exists for that email.';
+        } else {
+          errorMessage = 'Failed to sign up. Please try again.';
+        }  
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
       }
     } else {
