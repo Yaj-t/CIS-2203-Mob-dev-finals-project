@@ -121,9 +121,12 @@ class _SignupScreenState extends State<SignupScreenBody> {
           errorMessage = 'The password provided is too weak.';
         } else if (e.code == 'email-already-in-use') {
           errorMessage = 'The account already exists for that email.';
-        } else {
+        } else if (e.code == 'invalid-email'){
+          errorMessage = 'The email address is Invalid.';
+        } else{
           errorMessage = 'Failed to sign up. Please try again.';
-        }  
+        }
+        print(e.code);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
       }
     } else {
