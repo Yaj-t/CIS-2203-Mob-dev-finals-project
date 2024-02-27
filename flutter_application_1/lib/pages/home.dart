@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/favorites_page.dart';
 import 'character.dart';
 import 'saved_characters.dart';
 import '../components/appbar.dart';
@@ -27,7 +28,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   List<Widget> body = [
     CharacterBodyPage(),
-    MaterialsBodyPage(),
+    FavoritesPage(),
     AboutBodyPage(),
   ];
 
@@ -52,7 +53,7 @@ class HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.dashboard),
           ),
           BottomNavigationBarItem(
-            label: 'Saved Characters',
+            label: 'Favorites',
             icon: Icon(Icons.person),
           ),
           BottomNavigationBarItem(
