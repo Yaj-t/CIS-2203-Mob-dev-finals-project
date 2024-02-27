@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -17,19 +19,76 @@ class CharactersDetailsPage extends StatefulWidget {
 }
 
 class CharactersDetailsPageState extends State<CharactersDetailsPage> {
-  final String character;
+   final String character;
   final String vision;
   final Logger logger = Logger();
+  bool isFavorite = false;
 
   CharactersDetailsPageState({required this.character, required this.vision});
   ApiService apiService = ApiService();
 
   @override
+  @override
+  void initState() {
+    super.initState();
+    checkIfFavorite();
+  }
+
+  void checkIfFavorite() async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('favorites')
+          .doc(character)
+          .get();
+      setState(() {
+        isFavorite = doc.exists;
+      });
+    }
+  }
+
+  void toggleFavorite() async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('favorites')
+          .doc(character);
+
+      if (isFavorite) {
+        // Remove from favorites
+        await docRef.delete();
+      } else {
+        // Add to favorites
+        
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('favorites')
+            .doc(character)
+            .set({'character': character, 'vision': vision});
+      }
+      setState(() {
+        isFavorite = !isFavorite;
+      });
+    } else {
+      logger.e('User is not logged in');
+    }
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: getVisionSecondaryColor(vision),
       appBar: AppBar(
         backgroundColor: Color(0xff002c58),
+        actions: [
+          IconButton(
+            icon: Icon(isFavorite ? Icons.star : Icons.star_border),
+            onPressed: toggleFavorite,
+          ),
+        ],
       ),
       body: Center(
         child: FutureBuilder<List<dynamic>>(
@@ -224,33 +283,6 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Container(
-                      width: 350,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Save character sa lain na page
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Color(0xff002c58)),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          'Save Character',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 25),
                   ],
                 ),
               );
