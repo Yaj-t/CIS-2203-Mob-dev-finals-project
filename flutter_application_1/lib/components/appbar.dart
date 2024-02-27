@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   void signUserOut() {
+    GoogleSignIn _googleSignIn = GoogleSignIn();
+    _googleSignIn.signOut();
     FirebaseAuth.instance.signOut();
   }
   @override
