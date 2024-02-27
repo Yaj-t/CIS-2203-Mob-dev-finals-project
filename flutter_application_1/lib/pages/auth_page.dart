@@ -8,7 +8,7 @@ class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ) {
     return Scaffold(
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(), 
@@ -20,7 +20,7 @@ class AuthPage extends StatelessWidget {
 
           //user not logged in
           else{
-            return LoginScreen();
+            return const LoginScreen();
           }
         },
       )
