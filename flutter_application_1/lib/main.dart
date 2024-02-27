@@ -12,7 +12,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MaterialApp(
-    home: AuthPage(),
+    home: const AuthPage(),
     routes: routes,
   ));
 }
