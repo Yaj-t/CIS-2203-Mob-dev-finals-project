@@ -58,28 +58,43 @@ class _FavoritesPageState extends State<FavoritesPage> {
               itemBuilder: (context, index) {
                 final character = favoriteCharacters[index];
                 final characterName = character['character'];
-                return Card(
-                  elevation: 5,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Image.network(
-                          'https://genshin.jmp.blue/characters/$characterName/card', // Use big icon URL
-                          fit: BoxFit.cover,
+                final vision = character['vision']; // Assuming 'vision' is part of your character map
+
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CharactersDetailsPage(
+                          character: characterName,
+                          vision: vision,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          capitalize(characterName),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                    );
+                  },
+                  child: Card(
+                    elevation: 5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Image.network(
+                            'https://genshin.jmp.blue/characters/$characterName/card', // Use card URL
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            capitalize(characterName),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
