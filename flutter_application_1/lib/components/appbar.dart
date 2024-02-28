@@ -5,15 +5,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   HomeAppBar({Key? key}) : super(key: key);
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-
-  void _signUserOut(BuildContext context) async {
-    await _googleSignIn.signOut();
-    await FirebaseAuth.instance.signOut();
-    Navigator.of(context)
-        .pushReplacementNamed('/login'); // Assuming '/login' is the route to your login screen.
-  }
-
   void _navigateToSettings(BuildContext context) {
     Navigator.of(context).pushNamed('/settings'); // Assuming '/settings' is the route to your settings screen.
   }
@@ -26,12 +17,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       actions: [
         IconButton(
-          onPressed: () => _signUserOut(context),
-          icon: const Icon(Icons.logout),
-        ),
-        IconButton(
           onPressed: () => _navigateToSettings(context),
-          icon: const Icon(Icons.account_box),
+          icon: const Icon(Icons.settings),
         ),
       ],
       backgroundColor: const Color(0xff002c58),

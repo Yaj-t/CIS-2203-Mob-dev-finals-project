@@ -32,12 +32,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Icon(
             widget.iconData,
-            color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
+            color: Color(0xff002c58),
           ),
         ),
         labelText: widget.labelText,
         labelStyle: TextStyle(
-          color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
+          color: Color(0xff002c58),
         ),
         hintText: widget.hintText,
         enabledBorder: const OutlineInputBorder(

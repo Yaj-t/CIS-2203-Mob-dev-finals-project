@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -8,6 +9,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController? _usernameController;
   TextEditingController? _newPasswordController;
@@ -22,6 +24,16 @@ class _SettingsPageState extends State<SettingsPage> {
     _newPasswordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
     _loadUserData();
+  }
+
+ 
+
+  void _signUserOut(BuildContext context) async {
+    await _googleSignIn.signOut();
+    await FirebaseAuth.instance.signOut();
+    Navigator.pop(context);
+    Navigator.of(context)
+        .pushReplacementNamed('/login'); // Assuming '/login' is the route to your login screen.
   }
 
   _loadUserData() async {
@@ -219,36 +231,61 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFFFF5E1),
-      appBar: AppBar(title: Text('Settings'), backgroundColor: Color(0xff002c58),),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text('Email'),
-              subtitle: Text(_email ?? 'Loading...'),
-            ),
-            ListTile(
-              title: Text('Username'),
-              subtitle: Text(_username ?? 'No username'),
-              trailing: IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: _showEditUsernameDialog,
+      appBar: AppBar(
+        title: Text('Settings'),
+        backgroundColor: Color(0xff002c58),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: ListView(
+                children: [
+                  ListTile(
+                    title: Text('Email'),
+                    subtitle: Text(_email ?? 'Loading...'),
+                  ),
+                  ListTile(
+                    title: Text('Username'),
+                    subtitle: Text(_username ?? 'No username'),
+                    trailing: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: _showEditUsernameDialog,
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('Password'),
+                    subtitle: Text('********'),
+                    trailing: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: _showChangePasswordDialog,
+                    ),
+                  ),
+                  // The logout ListTile has been removed from here
+                ],
               ),
             ),
-            ListTile(
-              title: Text('Password'),
-              subtitle: Text('********'), // Placeholder for password
-              trailing: IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: _showChangePasswordDialog,
+          ),
+          // New padding with a button for logout
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red, // Set the button color
+                minimumSize: Size(double.infinity, 50), // Set the button size
               ),
+              onPressed: () => _signUserOut(context),
+              child: Text('Logout', style: TextStyle(fontSize: 18)),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+
+
+
 
   @override
   void dispose() {
