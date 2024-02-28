@@ -11,7 +11,24 @@ The significance of such a tool becomes even more apparent when considering the 
 
 This section holds the following frameworks, languages, and programming environments used in the development of this application
 
-* Flutter
-* Firebase
-* Genshin dev API ('https://github.com/topics/genshin-api')
+* Flutter 🐤
+* Firebase 🔥
+* Genshin dev API ('https://github.com/topics/genshin-api') 💎
 
+### 🔨 Getting Started 🔧
+
+**Step 1:**
+
+Download or clone this repo by using the link below:
+
+```
+https://github.com/zubairehman/flutter-boilerplate-project.git
+```
+
+**Step 2:**
+
+Go to project root and execute the following command in console to get the required dependencies: 
+
+```
+flutter pub get 
+```
