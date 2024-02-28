@@ -13,9 +13,9 @@ This section holds the following frameworks, languages, and programming environm
 
 * Flutter 🐤
 * Firebase 🔥
-* Genshin dev API ('https://github.com/topics/genshin-api') 💎
+* Genshin dev API (https://github.com/topics/genshin-api) 💎
 
-### 🔨 Getting Started 🔧
+### ⌚ Getting Started ✔️
 
 **Step 1:**
 
@@ -32,3 +32,16 @@ Go to project root and execute the following command in console to get the requi
 ```
 flutter pub get 
 ```
+
+**Step 3:**
+
+After downloading the following dependencies and access the mobile application, you can either sign up or use the following test accounts detailed below: 
+
+**Step 4:**
+
+After logging in, feel free to explore the features and offerings that the mobile application provides for Genshin enthusiasts! 😊
+
+### 🙋 Contributors 🙇
+
+[@Ivanne Dave L. Bayer](https://github.com/h4wks123)
+[@T-jay A. Abunales](https://github.com/Yaj-t)
