@@ -136,29 +136,41 @@ class _LoginScreenState extends State<LoginScreenBody> {
   }
 
   void login() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // Prevent dialog from closing on tap
-      builder: (context) => const Center(child: CircularProgressIndicator()),
+  showDialog(
+    context: context,
+    barrierDismissible: false, // Prevent dialog from closing on tap
+    builder: (context) => const Center(child: CircularProgressIndicator()),
+  );
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text,
     );
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      Navigator.pop(context); // Close the dialog
-      // Navigate to the next screen if login is successful
-      Navigator.pushNamed(context, HomeScreen.routeName);
-    } on FirebaseAuthException catch(e) {
-      Navigator.pop(context); // Close the dialog
-      // Handle login error
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+
+    Navigator.pop(context); // Close the dialog
+
+    User? user = userCredential.user;
+    if (user != null) {
+      if (user.emailVerified) {
+        // Email is verified, navigate to HomeScreen
+        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+      } else {
+        // Email is not verified, sign out the user and show a message
+        await FirebaseAuth.instance.signOut();
+        showVerifyEmailSentDialog(context, user);
       }
     }
+  } on FirebaseAuthException catch (e) {
+    Navigator.pop(context); // Close the dialog
+    String errorMessage = 'An error occurred. Please try again later.';
+    if (e.code == 'user-not-found') {
+      errorMessage = 'No user found for that email.';
+    } else if (e.code == 'wrong-password') {
+      errorMessage = 'Wrong password provided for that user.';
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
   }
+}
 
   void handleGoogleSignIn() {
     try{
@@ -175,6 +187,42 @@ class _LoginScreenState extends State<LoginScreenBody> {
     setState(() {
       obscureText = !obscureText;
     });
+  }
+
+  void showVerifyEmailSentDialog(BuildContext context, User user) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // User must tap button to close dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Verify Your Email"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('A verification email has been sent to your email address.'),
+                Text('Please verify your email to continue.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            // TextButton(
+            //   child: Text('Resend Email'),
+            //   onPressed: () {
+            //     user.sendEmailVerification();
+            //     Navigator.of(context).pop();
+            //   },
+            // ),
+            TextButton(
+              child: Text('Done'),
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

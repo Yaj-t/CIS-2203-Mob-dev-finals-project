@@ -107,14 +107,22 @@ class _SignupScreenState extends State<SignupScreenBody> {
         builder: (context) => const Center(child: CircularProgressIndicator()),
       );
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
         );
+        // Send email verification
+        User? user = userCredential.user;
+        if (user != null && !user.emailVerified) {
+          await user.sendEmailVerification();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Verification email has been sent. Please check your inbox.')),
+          );
+        }
         Navigator.pop(context); // Close the dialog
         // Navigate to the next screen if signup is successful
         Navigator.pop(context);
-      } on FirebaseAuthException catch(e){
+      } on FirebaseAuthException catch(e) {
         Navigator.pop(context); // Close the dialog
         final String errorMessage;
         if (e.code == 'weak-password') {
