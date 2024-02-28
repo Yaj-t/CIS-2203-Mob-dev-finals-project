@@ -179,23 +179,40 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void _updateUsername() async {
     User? user = _auth.currentUser;
-    if (user != null && _usernameController!.text.isNotEmpty) {
+    final newUsername = _usernameController!.text.trim();
+
+    if (user != null && newUsername.isNotEmpty) {
+      // Check for username uniqueness
+      final usernameExists = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: newUsername)
+          .get()
+          .then((snapshot) => snapshot.docs.isNotEmpty);
+
+      if (usernameExists) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Username is already taken. Please choose another one.")));
+        return;
+      }
+
       try {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-          'username': _usernameController!.text,
-        });
-        print("Username updated in Firestore");
-        
-        // Refresh user data to reflect the updated username
+        // If the username is unique, proceed to update
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'username': newUsername,
+        }, SetOptions(merge: true)); // Use merge option to update or set username
+
+        // Refresh user data to reflect the updated or new username
         await _loadUserData();
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Username updated successfully")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Username successfully updated.")));
       } catch (e) {
         print("Error updating username: $e");
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to update username")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to update username. Please try again.")));
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Username cannot be empty.")));
     }
   }
+
 
 
   @override
