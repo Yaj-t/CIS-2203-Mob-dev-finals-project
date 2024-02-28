@@ -38,6 +38,7 @@ flutter pub get
 After downloading the following dependencies and access the mobile application, you can either sign up or use the following test accounts detailed below: 
 
 Username: cis2203test123@gmail.com
+
 Password: @MOBdev123
 
 Searchable Usernames:
