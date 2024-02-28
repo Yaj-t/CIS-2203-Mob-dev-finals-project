@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-import 'apiservice.dart';
-import 'color.dart';
+import '../services/apiservice.dart';
+import '../styles/color.dart';
 import 'detailswidget.dart';
 
 class CharactersDetailsPage extends StatefulWidget {
@@ -17,19 +19,88 @@ class CharactersDetailsPage extends StatefulWidget {
 }
 
 class CharactersDetailsPageState extends State<CharactersDetailsPage> {
-  final String character;
+   final String character;
   final String vision;
   final Logger logger = Logger();
+  bool isFavorite = false;
 
   CharactersDetailsPageState({required this.character, required this.vision});
   ApiService apiService = ApiService();
 
   @override
+  @override
+  void initState() {
+    super.initState();
+    checkIfFavorite();
+  }
+
+  void checkIfFavorite() async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Assuming you have a method to fetch the username from the user's document
+      String? username = await fetchUsername(user.uid);
+      if (username != null) {
+        var doc = await FirebaseFirestore.instance
+            .collection('usernameData') // Use the actual collection name that stores username-related data
+            .doc(username) // Use the username as the document ID or as part of the path
+            .collection('favorites')
+            .doc(character)
+            .get();
+        setState(() {
+          isFavorite = doc.exists;
+        });
+      }
+    }
+  }
+
+  void toggleFavorite() async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Fetch the username for the current user
+      String? username = await fetchUsername(user.uid);
+      if (username != null) {
+        var docRef = FirebaseFirestore.instance
+            .collection('usernameData') // Adjust based on your collection structure
+            .doc(username) // Use username to reference the correct document
+            .collection('favorites')
+            .doc(character);
+
+        if (isFavorite) {
+          // Remove from favorites
+          await docRef.delete();
+        } else {
+          // Add to favorites
+          await docRef.set({'character': character, 'vision': vision});
+        }
+        setState(() {
+          isFavorite = !isFavorite;
+        });
+      }
+    } else {
+      logger.e('User is not logged in');
+    }
+  }
+
+  Future<String?> fetchUsername(String userId) async {
+    // Fetch the username using the user's UID
+    var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    if (userDoc.exists && userDoc.data()!.containsKey('username')) {
+      return userDoc.data()!['username'] as String?;
+    }
+    return null;
+  }
+  
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: getVisionSecondaryColor(vision),
       appBar: AppBar(
         backgroundColor: Color(0xff002c58),
+        actions: [
+          IconButton(
+            icon: Icon(isFavorite ? Icons.star : Icons.star_border),
+            onPressed: toggleFavorite,
+          ),
+        ],
       ),
       body: Center(
         child: FutureBuilder<List<dynamic>>(
@@ -224,33 +295,6 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Container(
-                      width: 350,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Save character sa lain na page
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Color(0xff002c58)),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          'Save Character',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 25),
                   ],
                 ),
               );

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
-import 'home.dart';
+import 'package:flutter_application_1/pages/settings_page.dart';
+import 'pages/loginScreen.dart';
+import 'pages/home.dart';
+import 'pages/signupPage.dart';
 
 final Map<String, WidgetBuilder> routes = {
   LoginScreen.routeName: (BuildContext context) => const LoginScreen(),
   HomeScreen.routeName: (BuildContext context) => HomeScreen(),
+  SignupPage.routeName: (BuildContext context) => SignupPage(),
+  '/settings': (context) => SettingsPage(),
 };
 
 

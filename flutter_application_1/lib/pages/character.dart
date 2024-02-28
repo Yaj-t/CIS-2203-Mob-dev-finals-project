@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'color.dart';
+import '../styles/color.dart';
 import 'details.dart';
 import 'package:logger/logger.dart';
 

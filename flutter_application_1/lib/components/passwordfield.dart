@@ -3,15 +3,19 @@ import 'package:flutter/material.dart';
 class PasswordField extends StatefulWidget {
   final String labelText;
   final String hintText;
+  final IconData iconData;
   final bool obscureText;
   final VoidCallback onTap;
+  final controller;
 
   PasswordField({
     Key? key,
     required this.labelText,
     required this.hintText,
+    required this.iconData,
     required this.obscureText,
     required this.onTap,
+    required this.controller,
   }) : super(key: key);
 
   @override
@@ -23,35 +27,37 @@ class _PasswordFieldState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
+    // Define a color that is visible regardless of focus state.
+    // Adjust this color to match your app's theme and ensure visibility.
+    Color iconColor = Color(0xff002c58); // Example color, adjust as needed.
+
     return TextFormField(
       obscureText: widget.obscureText,
+      controller: widget.controller,
       decoration: InputDecoration(
-        prefix: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Icon(
-            Icons.lock,
-            color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
-          ),
+        prefixIcon: Icon(
+          widget.iconData,
+          color: iconColor, // Use the defined visible color here.
         ),
         suffixIcon: GestureDetector(
           onTap: widget.onTap,
           child: Icon(
             widget.obscureText ? Icons.visibility_off : Icons.visibility,
-            color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
+            color: iconColor, // Use the defined visible color here.
           ),
         ),
         labelText: widget.labelText,
         labelStyle: TextStyle(
-          color: _isFocused ? Color(0xff002c58) : Color(0xFF808080),
+          color: _isFocused ? Color(0xff002c58) : iconColor, // Adjusted for consistent visibility.
         ),
         hintText: widget.hintText,
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(
             color: Color(0xFF808080),
           ),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(
             color: Color(0xff002c58),
@@ -69,7 +75,7 @@ class _PasswordFieldState extends State<PasswordField> {
         });
       },
       onChanged: (value) {
-        // Add any additional logic when the text changes
+        // Optional: Add any additional logic when the text changes
       },
     );
   }
