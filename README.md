@@ -1,5 +1,4 @@
 <!-- ABOUT THE PROJECT -->
-## About The Project
 # Teyvat Compendium: Genshin Character Data Vault
 
 In the dynamic world of Genshin Impact, avid players often find themselves immersed in the intricate details of character progression, constantly seeking information on the materials required for ascension and talent upgrades. Addressing this need for a seamless and comprehensive solution, our mobile application emerges as the ultimate companion for Genshin enthusiasts. The challenge lies in the scattered nature of information across various sources, leaving users in search of a centralized hub to effortlessly access character details and the corresponding materials essential for their ascent and skill enhancement.
