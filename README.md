@@ -11,6 +11,7 @@ The significance of such a tool becomes even more apparent when considering the 
 
 This section holds the following frameworks, languages, and programming environments used in the development of this application
 
-* React 
-* 
+* Flutter
+* Firebase
+* Genshin dev API ('https://github.com/topics/genshin-api')
 
