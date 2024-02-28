@@ -46,13 +46,13 @@ class AuthPage extends StatelessWidget {
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text('Resend Email'),
-              onPressed: () {
-                user.sendEmailVerification();
-                Navigator.of(context).pop();
-              },
-            ),
+            // TextButton(
+            //   child: Text('Resend Email'),
+            //   onPressed: () {
+            //     user.sendEmailVerification();
+            //     Navigator.of(context).pop();
+            //   },
+            // ),
             TextButton(
               child: Text('Done'),
               onPressed: () {

@@ -153,7 +153,7 @@ class _LoginScreenState extends State<LoginScreenBody> {
     if (user != null) {
       if (user.emailVerified) {
         // Email is verified, navigate to HomeScreen
-        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        // Navigator.pushReplacementNamed(context, HomeScreen.routeName);
       } else {
         // Email is not verified, sign out the user and show a message
         await FirebaseAuth.instance.signOut();

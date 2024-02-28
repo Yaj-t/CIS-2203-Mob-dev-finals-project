@@ -111,31 +111,34 @@ class _SignupScreenState extends State<SignupScreenBody> {
   }
 
   void signup() async {
+    // First, validate the passwords match.
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Passwords do not match.')));
       return;
     }
 
+    // Show loading indicator.
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dialog from closing on tap
+      barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
-    // Check if the username is unique
-    final usernameExists = await FirebaseFirestore.instance
-      .collection('usernames')
-      .doc(usernameController.text)
+    // Check if the username is unique by querying a collection where each document represents a username.
+    bool usernameExists = await FirebaseFirestore.instance
+      .collection('users') // Consider having a 'users' collection where each document ID is the username for easy checking.
+      .where('username', isEqualTo: usernameController.text)
       .get()
-      .then((doc) => doc.exists);
+      .then((querySnapshot) => querySnapshot.docs.isNotEmpty); // Check if any documents are returned.
 
     if (usernameExists) {
-      Navigator.pop(context); // Close the dialog
+      Navigator.pop(context); // Close the loading dialog.
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Username is already taken. Please choose another one.')));
       return;
     }
 
     try {
+      // Attempt to create a new user with email and password.
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
@@ -143,29 +146,30 @@ class _SignupScreenState extends State<SignupScreenBody> {
 
       User? user = userCredential.user;
       if (user != null) {
-        // Add the username to Firestore
-        await FirebaseFirestore.instance.collection('usernames').doc(usernameController.text).set({
-          'userId': user.uid,
+        // Username is unique and user created successfully, now save the username to Firestore.
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'username': usernameController.text,
+          // You can add more user-related information here.
         });
-        print("here");
 
-        if (!user.emailVerified) {
-          await user.sendEmailVerification();
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Verification email has been sent. Please check your inbox.')));
-        }
-
-        Navigator.pop(context); // Close the dialog
-        // Navigate to the next screen or show a success message
+        // Optional: Send email verification.
+        await user.sendEmailVerification();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Verification email has been sent. Please check your inbox.')));
+        Navigator.pop(context);
+        // Close the loading dialog and maybe navigate the user to the next screen or show a success message.
+        Navigator.pop(context);
       }
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context); // Close the dialog
+      // Handle various Firebase Auth exceptions, e.g., weak-password, email-already-in-use, etc.
+      Navigator.pop(context); // Close the loading dialog.
       final String errorMessage = e.code == 'weak-password' ? 'The password provided is too weak.' :
                                   e.code == 'email-already-in-use' ? 'The account already exists for that email.' :
-                                  e.code == 'invalid-email' ? 'The email address is Invalid.' :
+                                  e.code == 'invalid-email' ? 'The email address is invalid.' :
                                   'Failed to sign up. Please try again.';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
     }
   }
+
 
 
   void setPasswordVisibility() {
