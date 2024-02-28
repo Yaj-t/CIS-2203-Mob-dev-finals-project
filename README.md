@@ -1,5 +1,5 @@
 <!-- ABOUT THE PROJECT -->
-# Teyvat Compendium: Genshin Character Data Vault
+# Teyvat Compendium: Genshin Character Data Vault 👾🎮👾
 
 In the dynamic world of Genshin Impact, avid players often find themselves immersed in the intricate details of character progression, constantly seeking information on the materials required for ascension and talent upgrades. Addressing this need for a seamless and comprehensive solution, our mobile application emerges as the ultimate companion for Genshin enthusiasts. The challenge lies in the scattered nature of information across various sources, leaving users in search of a centralized hub to effortlessly access character details and the corresponding materials essential for their ascent and skill enhancement.
 
@@ -7,16 +7,10 @@ To bridge this information gap, our app, "Teyvat Compendium," leverages the func
 
 The significance of such a tool becomes even more apparent when considering the constantly evolving nature of the Genshin Impact universe. With regular updates introducing new characters, talents, and materials, this application serves as an indispensable resource, keeping players well-informed and empowering them to optimize their gaming experience. 
 
-### Built With
+### 🔨 Built With 🔧
 
 This section holds the following frameworks, languages, and programming environments used in the development of this application
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+* React 
+* 
 
