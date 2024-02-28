@@ -31,7 +31,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           onPressed: () => _navigateToSettings(context),
-          icon: const Icon(Icons.settings),
+          icon: const Icon(Icons.account_box),
         ),
       ],
       backgroundColor: const Color(0xff002c58),
