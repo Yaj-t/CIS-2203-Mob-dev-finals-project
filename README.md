@@ -13,7 +13,7 @@ This section holds the following frameworks, languages, and programming environm
 
 * Flutter 🐤
 * Firebase 🔥
-* Genshin dev API (https://github.com/topics/genshin-api) 💎
+* [Genshin Dev API](https://github.com/genshindev/api) 💎
 
 # ⌚ Getting Started ✔️
 
