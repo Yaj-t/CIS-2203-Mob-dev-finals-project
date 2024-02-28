@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../styles/color.dart';
-import 'details.dart';
+import 'details.dart'; // Make sure this import points to your CharactersDetailsPage correctly
 
 class FavoritesPage extends StatefulWidget {
   @override
@@ -19,26 +19,40 @@ class _FavoritesPageState extends State<FavoritesPage> {
     fetchFavorites();
   }
 
+  Future<String?> fetchUsername(String userId) async {
+    var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    if (userDoc.exists && userDoc.data()!.containsKey('username')) {
+      return userDoc.data()!['username'] as String?;
+    }
+    return null;
+  }
+
   void fetchFavorites() async {
-    User? currentUser = _auth.currentUser;
-    if (currentUser != null) {
-      final QuerySnapshot favoriteSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .collection('favorites')
-          .get();
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Fetch the username for the current user
+      String? username = await fetchUsername(user.uid);
+      if (username != null) {
+        // Adjusted to fetch from 'usernameData' using the username
+        final QuerySnapshot favoriteSnapshot = await FirebaseFirestore.instance
+            .collection('usernameData') // Use 'usernameData' collection
+            .doc(username) // Use username to reference the correct document
+            .collection('favorites')
+            .get();
 
-      final List<Map<String, dynamic>> fetchedFavorites = favoriteSnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
+        final List<Map<String, dynamic>> fetchedFavorites = favoriteSnapshot.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList();
 
-      if (mounted) {
-        setState(() {
-          favoriteCharacters = fetchedFavorites;
-        });
+        if (mounted) {
+          setState(() {
+            favoriteCharacters = fetchedFavorites;
+          });
+        }
       }
     }
   }
+
 
   String capitalize(String text) {
     return text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : text;
@@ -49,18 +63,26 @@ class _FavoritesPageState extends State<FavoritesPage> {
     return Scaffold(
       backgroundColor: Color(0xFFFFF5E1),
       body: favoriteCharacters.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: Text(
+                'No favorites yet',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff002c58),
+                ),
+              ),
+            )
           : GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Adjust number of columns
-                childAspectRatio: 0.75, // Adjust child aspect ratio
+                crossAxisCount: 2,
+                childAspectRatio: 0.75,
               ),
               itemCount: favoriteCharacters.length,
               itemBuilder: (context, index) {
-                
                 final character = favoriteCharacters[index];
                 final characterName = character['character'];
-                final vision = character['vision']; // Assuming 'vision' is part of your character map
+                final vision = character['vision'];
 
                 return InkWell(
                   onTap: () {

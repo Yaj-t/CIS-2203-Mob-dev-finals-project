@@ -37,47 +37,59 @@ class CharactersDetailsPageState extends State<CharactersDetailsPage> {
   void checkIfFavorite() async {
     var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      var doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('favorites')
-          .doc(character)
-          .get();
-      setState(() {
-        isFavorite = doc.exists;
-      });
+      // Assuming you have a method to fetch the username from the user's document
+      String? username = await fetchUsername(user.uid);
+      if (username != null) {
+        var doc = await FirebaseFirestore.instance
+            .collection('usernameData') // Use the actual collection name that stores username-related data
+            .doc(username) // Use the username as the document ID or as part of the path
+            .collection('favorites')
+            .doc(character)
+            .get();
+        setState(() {
+          isFavorite = doc.exists;
+        });
+      }
     }
   }
 
   void toggleFavorite() async {
     var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      var docRef = FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('favorites')
-          .doc(character);
-
-      if (isFavorite) {
-        // Remove from favorites
-        await docRef.delete();
-      } else {
-        // Add to favorites
-        
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
+      // Fetch the username for the current user
+      String? username = await fetchUsername(user.uid);
+      if (username != null) {
+        var docRef = FirebaseFirestore.instance
+            .collection('usernameData') // Adjust based on your collection structure
+            .doc(username) // Use username to reference the correct document
             .collection('favorites')
-            .doc(character)
-            .set({'character': character, 'vision': vision});
+            .doc(character);
+
+        if (isFavorite) {
+          // Remove from favorites
+          await docRef.delete();
+        } else {
+          // Add to favorites
+          await docRef.set({'character': character, 'vision': vision});
+        }
+        setState(() {
+          isFavorite = !isFavorite;
+        });
       }
-      setState(() {
-        isFavorite = !isFavorite;
-      });
     } else {
       logger.e('User is not logged in');
     }
   }
+
+  Future<String?> fetchUsername(String userId) async {
+    // Fetch the username using the user's UID
+    var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    if (userDoc.exists && userDoc.data()!.containsKey('username')) {
+      return userDoc.data()!['username'] as String?;
+    }
+    return null;
+  }
+  
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: getVisionSecondaryColor(vision),
