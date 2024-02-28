@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,6 +32,7 @@ class _SignupScreenState extends State<SignupScreenBody> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final usernameController = TextEditingController();
   bool obscureText = true;
 
   @override
@@ -38,6 +40,7 @@ class _SignupScreenState extends State<SignupScreenBody> {
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    usernameController.dispose();
     super.dispose();
   }
 
@@ -57,6 +60,14 @@ class _SignupScreenState extends State<SignupScreenBody> {
                 const Text(
                   'Sign Up',
                   style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w800, color: Color(0xff002c58)),
+                ),
+                const SizedBox(height: 20.0),
+                CustomTextFormField(
+                  labelText: "Username",
+                  hintText: "Choose a unique username",
+                  iconData: Icons.person,
+                  textInputType: TextInputType.text,
+                  controller: usernameController,
                 ),
                 const SizedBox(height: 20.0),
                 CustomTextFormField(
@@ -100,49 +111,62 @@ class _SignupScreenState extends State<SignupScreenBody> {
   }
 
   void signup() async {
-    if (passwordController.text == confirmPasswordController.text) {
-      showDialog(
-        context: context,
-        barrierDismissible: false, // Prevent dialog from closing on tap
-        builder: (context) => const Center(child: CircularProgressIndicator()),
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Passwords do not match.')));
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dialog from closing on tap
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    // Check if the username is unique
+    final usernameExists = await FirebaseFirestore.instance
+      .collection('usernames')
+      .doc(usernameController.text)
+      .get()
+      .then((doc) => doc.exists);
+
+    if (usernameExists) {
+      Navigator.pop(context); // Close the dialog
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Username is already taken. Please choose another one.')));
+      return;
+    }
+
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
       );
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
-        // Send email verification
-        User? user = userCredential.user;
-        if (user != null && !user.emailVerified) {
+
+      User? user = userCredential.user;
+      if (user != null) {
+        // Add the username to Firestore
+        await FirebaseFirestore.instance.collection('usernames').doc(usernameController.text).set({
+          'userId': user.uid,
+        });
+        print("here");
+
+        if (!user.emailVerified) {
           await user.sendEmailVerification();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Verification email has been sent. Please check your inbox.')),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Verification email has been sent. Please check your inbox.')));
         }
+
         Navigator.pop(context); // Close the dialog
-        // Navigate to the next screen if signup is successful
-        Navigator.pop(context);
-      } on FirebaseAuthException catch(e) {
-        Navigator.pop(context); // Close the dialog
-        final String errorMessage;
-        if (e.code == 'weak-password') {
-          errorMessage = 'The password provided is too weak.';
-        } else if (e.code == 'email-already-in-use') {
-          errorMessage = 'The account already exists for that email.';
-        } else if (e.code == 'invalid-email'){
-          errorMessage = 'The email address is Invalid.';
-        } else{
-          errorMessage = 'Failed to sign up. Please try again.';
-        }
-        print(e.code);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+        // Navigate to the next screen or show a success message
       }
-    } else {
-      // Handle password mismatch
-      final errorMessage = 'Passwords do not match.';
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context); // Close the dialog
+      final String errorMessage = e.code == 'weak-password' ? 'The password provided is too weak.' :
+                                  e.code == 'email-already-in-use' ? 'The account already exists for that email.' :
+                                  e.code == 'invalid-email' ? 'The email address is Invalid.' :
+                                  'Failed to sign up. Please try again.';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
     }
   }
+
 
   void setPasswordVisibility() {
     setState(() {
