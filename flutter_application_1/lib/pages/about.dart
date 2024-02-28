@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_octicons/flutter_octicons.dart';
@@ -5,23 +6,29 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AboutBodyPage extends StatelessWidget {
   final Uri _url = Uri.parse('https://github.com/genshindev/api');
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  
+
+  AboutBodyPage({Key? key}) : super(key: key);
+
   Future<void> _launchUrl() async {
     if (!await launchUrl(_url)) {
       throw Exception('Could not launch $_url');
     }
   }
 
-  String? getUserName() {
-    User? user = _auth.currentUser;
-    return user?.email; // This returns the user's name
+  Future<String?> fetchUsername() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
+        return data['username'] as String?;
+      }
+    }
+    return null;
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    String? userName = getUserName();
-    print(userName);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -39,14 +46,23 @@ class AboutBodyPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 25),
-              Text(
-                'Hello, $userName!',
-                style: TextStyle(
-                  fontFamily: 'Genshin',
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff002c58),
-                ),
+              FutureBuilder<String?>(
+                future: fetchUsername(),
+                builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  final String username = snapshot.data ?? "Traveler";
+                  return Text(
+                    'Hello, $username!',
+                    style: TextStyle(
+                      fontFamily: 'Genshin',
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff002c58),
+                    ),
+                  );
+                },
               ),
               SizedBox(height: 15),
               Container(
