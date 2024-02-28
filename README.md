@@ -44,4 +44,5 @@ After logging in, feel free to explore the features and offerings that the mobil
 ### 🙋 Contributors 🙇
 
 [@Ivanne Dave L. Bayer](https://github.com/h4wks123)
+
 [@T-jay A. Abunales](https://github.com/Yaj-t)
