@@ -47,6 +47,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFFF5E1),
       body: favoriteCharacters.isEmpty
           ? Center(child: CircularProgressIndicator())
           : GridView.builder(
@@ -56,6 +57,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
               ),
               itemCount: favoriteCharacters.length,
               itemBuilder: (context, index) {
+                
                 final character = favoriteCharacters[index];
                 final characterName = character['character'];
                 final vision = character['vision']; // Assuming 'vision' is part of your character map
@@ -74,6 +76,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   },
                   child: Card(
                     elevation: 5,
+                    color: getVisionColor(vision),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -88,8 +91,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
                           child: Text(
                             capitalize(characterName),
                             style: TextStyle(
-                              fontSize: 16,
+                              fontFamily: 'Genshin',
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color: Color(0xff002c58),
                             ),
                           ),
                         ),
